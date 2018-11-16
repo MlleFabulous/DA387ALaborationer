@@ -116,17 +116,17 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                 setTvMaxRange("" + sensor.getMaximumRange());
                 setTvMinDelay("" + sensor.getMinDelay());
             } else {
-                Toast.makeText(this, "Listener not registered", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Listener not registered", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this,"Sensor not found",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Sensor not found",Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     protected void onPause() {
         sensorManager.unregisterListener(this);
-        Toast.makeText(this, "Listener unregistered", Toast.LENGTH_LONG);
+        Toast.makeText(this, "Listener unregistered", Toast.LENGTH_SHORT).show();
         super.onPause();
     }
 
