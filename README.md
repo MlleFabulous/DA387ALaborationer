@@ -7,3 +7,5 @@
 #4 build ui.xmls for P2WeatherChannel
 
 #5 Forgot to add README.md to last commit
+
+#6 ui built for fragment_maps, fragment_sensor and working on fragment_api.
