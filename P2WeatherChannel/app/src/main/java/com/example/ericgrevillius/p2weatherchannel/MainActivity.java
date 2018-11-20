@@ -19,6 +19,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    private Controller controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        controller = new Controller(this);
     }
 
     public void setFragment(Fragment fragment, String tag, boolean backStack){
@@ -86,13 +89,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_map) {
-            // Handle the camera action
+            // Change to mapFragment
+            controller.showMapFragment();
         } else if (id == R.id.nav_sensors) {
             // Change to sensorFragment
+            controller.showSensorFragment();
         } else if (id == R.id.nav_api) {
             // Change to apiFragment
+            controller.showAPIFragment();
         } else if (id == R.id.nav_difference) {
             // Change to DifferenceFragment
+            controller.showDifferenceFragment();
         }
 
         drawer.closeDrawer(GravityCompat.START);

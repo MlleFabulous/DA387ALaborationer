@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 public class APIFragment extends Fragment {
 
 
+    private Controller controller;
+
     public APIFragment() {
         // Required empty public constructor
     }
@@ -26,4 +28,7 @@ public class APIFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_api, container, false);
     }
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 }

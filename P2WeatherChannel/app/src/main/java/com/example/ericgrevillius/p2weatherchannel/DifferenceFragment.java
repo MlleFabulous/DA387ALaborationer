@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 public class DifferenceFragment extends Fragment {
 
 
+    private Controller controller;
+
     public DifferenceFragment() {
         // Required empty public constructor
     }
@@ -26,4 +28,7 @@ public class DifferenceFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_difference, container, false);
     }
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 }

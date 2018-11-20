@@ -20,4 +20,6 @@
     <string name="temperature_difference_text">Temperature difference</string>
     <string name="humidity_difference_text">Humidity difference</string>
     <string name="differences_text">Differences</string>
+
+    <string name="google_maps_key">AIzaSyBUrWhxtv8_q1URaZbV0iYN9w79aGECiHo</string>
 </resources>

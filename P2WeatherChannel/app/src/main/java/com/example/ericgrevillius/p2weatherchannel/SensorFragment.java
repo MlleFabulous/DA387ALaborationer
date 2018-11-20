@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 public class SensorFragment extends Fragment {
 
 
+    private Controller controller;
+
     public SensorFragment() {
         // Required empty public constructor
     }
@@ -26,4 +28,7 @@ public class SensorFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_sensor, container, false);
     }
 
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 }
