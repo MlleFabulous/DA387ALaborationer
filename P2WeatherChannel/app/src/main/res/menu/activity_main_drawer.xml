@@ -7,19 +7,19 @@
         <item
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_map_grey_800_24dp"
-            android:title="Map" />
+            android:title="@string/map_text" />
         <item
             android:id="@+id/nav_sensors"
             android:icon="@drawable/ic_settings_input_antenna_grey_800_24dp"
-            android:title="Sensors" />
+            android:title="@string/sensors_text" />
         <item
             android:id="@+id/nav_api"
             android:icon="@drawable/ic_cloud_download_grey_800_24dp"
-            android:title="Weather API" />
+            android:title="@string/weather_api_text" />
         <item
             android:id="@+id/nav_difference"
             android:icon="@drawable/ic_call_split_grey_800_24dp"
-            android:title="Difference" />
+            android:title="@string/difference_text" />
     </group>
 
 </menu>

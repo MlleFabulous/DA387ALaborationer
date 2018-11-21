@@ -13,3 +13,5 @@
 #7 Graphical User Interface (GUI) is done, modifies may come.
 
 #8 Navigation in P2WeatherChannel work well and working on Volley requests and async requests.
+
+#9 Work done on mapsFragment and apiFragment. mapsFragment is done for now and apiFragment is WIP.

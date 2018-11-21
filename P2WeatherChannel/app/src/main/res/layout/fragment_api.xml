@@ -27,7 +27,8 @@
             android:id="@+id/api_weather_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:contentDescription="@string/weather_text"/>
     </LinearLayout>
 
     <LinearLayout
@@ -140,7 +141,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/api_linear_layout"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -149,9 +150,13 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/volley_button"
+            android:id="@+id/api_volley_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:text="@string/volley_text" />
 
@@ -160,6 +165,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/async_task_text" />
+            android:text="@string/async_task_text"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginEnd="0dp"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

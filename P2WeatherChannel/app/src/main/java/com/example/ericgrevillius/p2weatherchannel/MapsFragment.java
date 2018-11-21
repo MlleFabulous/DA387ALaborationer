@@ -34,6 +34,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     private Bundle savedInstanceState;
     private LocationManager locationManager;
     private Location lastLocation;
+    private Marker currentMarker;
 
 
     public MapsFragment() {
@@ -72,7 +73,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         mo = new MarkerOptions().position(latLng);
         markers.add(mo);
         map.addMarker(mo);
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
     private void clearMarkers(){
@@ -114,7 +114,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-//                controller.retreiveWeatherDataForLocation(marker.getPosition());
+                controller.setLocation(marker.getPosition());
                 return false;
             }
         });
@@ -131,7 +131,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
     public void onLocationChanged(Location location) {
         lastLocation = location;
         LatLng latLng = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-        addMarker(latLng);
+        if (currentMarker != null) {
+            currentMarker.remove();
+        }
+        MarkerOptions mo = new MarkerOptions().position(latLng).title("My position");
+        currentMarker = map.addMarker(mo);
     }
 
     @Override
