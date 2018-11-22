@@ -15,3 +15,5 @@
 #8 Navigation in P2WeatherChannel work well and working on Volley requests and async requests.
 
 #9 Work done on mapsFragment and apiFragment. mapsFragment is done for now and apiFragment is WIP.
+
+#10 First version of functions for connecting to OpenWeatherMap-API is done and needs testing.
