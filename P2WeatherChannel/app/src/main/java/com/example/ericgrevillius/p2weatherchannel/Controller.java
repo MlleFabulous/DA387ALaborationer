@@ -106,7 +106,7 @@ public class Controller {
             }
             openWeatherAPI.sendWeatherDataRequest(type,location);
         } else {
-            Toast.makeText(context, "No location is set", Toast.LENGTH_LONG);
+            Toast.makeText(context, "No location is set", Toast.LENGTH_LONG).show();
         }
     }
     
@@ -115,9 +115,9 @@ public class Controller {
         JSONArray weatherArray = json.getJSONArray("weather");
         toReturn[0] = "" + weatherArray.getJSONObject(0).getString("icon");
         JSONObject main = json.getJSONObject("main");
-        toReturn[1] = "" + main.getDouble("pressure");
-        toReturn[2] = "" + (main.getDouble("temp") - 273.15) + "°C";
-        toReturn[3] = "" + main.getDouble("humidity");
+        toReturn[1] = "" + main.getDouble("pressure") + " hPa";
+        toReturn[2] = "" + (main.getDouble("temp") - 273.15) + " °C";
+        toReturn[3] = "" + main.getDouble("humidity") + " %";
         toReturn[4] = null; //calculate altitude;
         return toReturn;
     }

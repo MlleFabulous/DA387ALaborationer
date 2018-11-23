@@ -22,3 +22,5 @@
 	Corrected some minor things like that resources MUST start with an alphabetical letter and not a number or other sign. POPPYCOCK!
 	
 #12 P3LightBender initialized.
+
+#13 SensorFragment and sensors seems to be working, needs testing on emulator.
