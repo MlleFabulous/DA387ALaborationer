@@ -24,3 +24,5 @@
 #12 P3LightBender initialized.
 
 #13 SensorFragment and sensors seems to be working, needs testing on emulator.
+
+#14 Started working on DifferenceFragment and added some TODOs.

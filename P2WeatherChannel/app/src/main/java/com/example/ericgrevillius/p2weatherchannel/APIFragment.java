@@ -16,6 +16,7 @@ import android.widget.TextView;
  * A simple {@link Fragment} subclass.
  */
 public class APIFragment extends Fragment {
+    //TODO: add TextView displaying coordinates.
     private int weatherImageResource;
     private ImageView ivWeather;
     private TextView tvPressure;

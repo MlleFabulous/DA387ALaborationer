@@ -37,8 +37,6 @@ public class SensorFragment extends Fragment implements SensorEventListener, Loc
     private boolean isTemperatureSensorPresent;
     private Sensor humiditySensor;
     private boolean isHumiditySensorPresent;
-    private Sensor altitudeSensor;
-    private boolean isAltitudeSensorPresent;
 
     public SensorFragment() {
         // Required empty public constructor
@@ -104,13 +102,13 @@ public class SensorFragment extends Fragment implements SensorEventListener, Loc
     @Override
     public void onResume() {
         super.onResume();
-        if (pressureSensor != null){
+        if (isPressureSensorPresent){
             sensorManager.registerListener(this,pressureSensor,SensorManager.SENSOR_DELAY_NORMAL);
         }
-        if (temperatureSensor != null){
+        if (isTemperatureSensorPresent){
             sensorManager.registerListener(this,temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
-        if (humiditySensor != null){
+        if (isHumiditySensorPresent){
             sensorManager.registerListener(this, humiditySensor,SensorManager.SENSOR_DELAY_NORMAL);
         }
 //        if(ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
