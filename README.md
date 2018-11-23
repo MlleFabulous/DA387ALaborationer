@@ -20,3 +20,5 @@
 
 #11 Functions for connecting to OpenWeatherMap-API via AsyncTask and Volley is tested, debugged and corrected. ATM it works perfectly.
 	Corrected some minor things like that resources MUST start with an alphabetical letter and not a number or other sign. POPPYCOCK!
+	
+#12 P3LightBender initialized.
