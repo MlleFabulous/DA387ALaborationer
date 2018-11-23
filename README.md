@@ -17,3 +17,6 @@
 #9 Work done on mapsFragment and apiFragment. mapsFragment is done for now and apiFragment is WIP.
 
 #10 First version of functions for connecting to OpenWeatherMap-API is done and needs testing.
+
+#11 Functions for connecting to OpenWeatherMap-API via AsyncTask and Volley is tested, debugged and corrected. ATM it works perfectly.
+	Corrected some minor things like that resources MUST start with an alphabetical letter and not a number or other sign. POPPYCOCK!

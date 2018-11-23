@@ -38,7 +38,7 @@ public class Controller {
 
     public Controller(MainActivity activity){
         context = activity;
-        openWeatherAPI = new OpenWeatherAPI(context, new VolleyListener(), new AsyncListener());
+        openWeatherAPI = new OpenWeatherAPI(context, new VolleyListener());
         initializeAPIFragment();
         initializeDifferenceFragment();
         initializeMapsFragment();
@@ -101,6 +101,9 @@ public class Controller {
 
     public void requestOpenWeatherData(String type) {
         if (location != null){
+            if (type.matches("async")){
+                openWeatherAPI.setNewAsynctaskListener(new AsyncTaskListener());
+            }
             openWeatherAPI.sendWeatherDataRequest(type,location);
         } else {
             Toast.makeText(context, "No location is set", Toast.LENGTH_LONG);
@@ -110,13 +113,37 @@ public class Controller {
     private String[] parseJSONWeatherData(JSONObject json) throws JSONException {
         String [] toReturn = new String [5];
         JSONArray weatherArray = json.getJSONArray("weather");
-        toReturn[0] = "" + weatherArray.getJSONObject(4).getInt("icon");
-        JSONArray main = json.getJSONArray("main");
-        toReturn[1] = "" + main.getJSONObject(1).getDouble("pressure");
-        toReturn[2] = "" + (main.getJSONObject(0).getDouble("temp") - 273.15) + "°C";
-        toReturn[3] = main.getJSONObject(2).getString("humidity");
+        toReturn[0] = "" + weatherArray.getJSONObject(0).getString("icon");
+        JSONObject main = json.getJSONObject("main");
+        toReturn[1] = "" + main.getDouble("pressure");
+        toReturn[2] = "" + (main.getDouble("temp") - 273.15) + "°C";
+        toReturn[3] = "" + main.getDouble("humidity");
         toReturn[4] = null; //calculate altitude;
         return toReturn;
+    }
+
+    private int findImageResource(String weather){
+        switch (weather){
+            case "01d":
+                return R.drawable.a01d;
+            case "02d":
+                return R.drawable.a02d;
+            case "03d":
+                return R.drawable.a03d;
+            case "04d":
+                return R.drawable.a04d;
+            case "09d":
+                return R.drawable.a09d;
+            case "10d":
+                return R.drawable.a10d;
+            case "11d":
+                return R.drawable.a11d;
+            case "13d":
+                return R.drawable.a13d;
+            case "50d":
+                return R.drawable.a50d;
+        }
+        return -1;
     }
 
     class VolleyListener implements Response.Listener<JSONObject>, Response.ErrorListener{
@@ -127,7 +154,7 @@ public class Controller {
             try {
                 Log.d(TAG, "onResponse: " + response.toString());
                 String [] data = parseJSONWeatherData(response);
-                int weatherImageResource = Integer.parseInt(data[0]);
+                int weatherImageResource = findImageResource(data[0]);
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime());
                 apiFragment.setValues(weatherImageResource,data[1],data[2],data[3],data[4],timeStamp,TAG);
             } catch (JSONException e) {
@@ -142,7 +169,7 @@ public class Controller {
         }
     }
 
-    class AsyncListener extends AsyncTask<String, Void, JSONObject> {
+    class AsyncTaskListener extends AsyncTask<String, Void, JSONObject> {
         private static final String TAG = "via AsyncTask";
         @Override
         protected JSONObject doInBackground(String... urls) {
@@ -153,7 +180,6 @@ public class Controller {
                 String inString = new Scanner(input, "UTF-8").useDelimiter("\\A").next();
                 input.close();
                 JSONObject response = new JSONObject(inString);
-//                Log.d(TAG, "doInBackground: " + response.toString());
                 return response;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -169,7 +195,7 @@ public class Controller {
                 try {
                     Log.d(TAG, "onResponse: " + response.toString());
                     String [] data = parseJSONWeatherData(response);
-                    int weatherImageResource = Integer.parseInt(data[0]);
+                    int weatherImageResource = findImageResource(data[0]);
                     String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime());
                     apiFragment.setValues(weatherImageResource,data[1],data[2],data[3],data[4],timeStamp,TAG);
                 } catch (JSONException e) {

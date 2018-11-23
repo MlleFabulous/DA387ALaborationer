@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 public class OpenWeatherAPI {
     private static final String TAG = "OpenWeatherAPI";
-    private static final String URL = "api.openweathermap.org/data/2.5/weather?";
+    private static final String URL = "http://api.openweathermap.org/data/2.5/weather?";
     private static final String URL_LAT_EXT = "lat=";
     private String lat;
     private static final String URL_LONG_EXT = "&lon=";
@@ -23,12 +23,12 @@ public class OpenWeatherAPI {
     private static final String API_KEY = "0bd96e0c4735308a0af0ca40dc18fd40";
     private RequestQueue requestQueue;
     private Controller.VolleyListener volleyListener;
-    private Controller.AsyncListener asyncListener;
+    private Controller.AsyncTaskListener asyncTaskListener;
+    private Controller.AsyncTaskListener newAsynctaskListener;
 
-    public OpenWeatherAPI(Context context, Controller.VolleyListener volleyListener, Controller.AsyncListener asyncListener) {
+    public OpenWeatherAPI(Context context, Controller.VolleyListener volleyListener) {
         requestQueue = Volley.newRequestQueue(context);
         this.volleyListener = volleyListener;
-        this.asyncListener = asyncListener;
     }
 
     public void sendWeatherDataRequest(String type, LatLng latLng){
@@ -46,12 +46,16 @@ public class OpenWeatherAPI {
 
     private void asyncTaskWeatherRequest() {
         String url = URL + URL_LAT_EXT + lat + URL_LONG_EXT + lng + URL_KEY_EXT + API_KEY;
-        asyncListener.execute(url);
+        asyncTaskListener.execute(url);
     }
 
     private void volleyWeatherDataRequest() {
         String url = URL + URL_LAT_EXT + lat + URL_LONG_EXT + lng + URL_KEY_EXT + API_KEY;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, new JSONObject(), volleyListener, volleyListener );
         requestQueue.add(request);
+    }
+
+    public void setNewAsynctaskListener(Controller.AsyncTaskListener newAsynctaskListener) {
+        this.asyncTaskListener = newAsynctaskListener;
     }
 }
