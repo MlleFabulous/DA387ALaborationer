@@ -24,7 +24,6 @@ public class OpenWeatherAPI {
     private RequestQueue requestQueue;
     private Controller.VolleyListener volleyListener;
     private Controller.AsyncTaskListener asyncTaskListener;
-    private Controller.AsyncTaskListener newAsynctaskListener;
 
     public OpenWeatherAPI(Context context, Controller.VolleyListener volleyListener) {
         requestQueue = Volley.newRequestQueue(context);

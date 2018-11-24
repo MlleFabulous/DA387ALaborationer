@@ -9,32 +9,62 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/api_linear_layout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/api_title"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/api_values"
-            android:layout_weight="2"
-            android:textSize="40sp"/>
+            android:orientation="horizontal"
+            tools:paddingBottom="20dp">
 
-        <ImageView
-            android:id="@+id/api_weather_image_view"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/api_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/api_values"
+                android:textSize="40sp" />
+
+            <ImageView
+                android:id="@+id/api_weather_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/weather_text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/weather_text"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/api_coordinates_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/api_weather_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/api_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -52,7 +82,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="" />
+                android:text=""
+                android:textSize="20sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -73,7 +104,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="" />
+                android:text=""
+                android:textSize="20sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -95,7 +127,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="" />
+                android:text=""
+                android:textSize="20sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -106,38 +139,19 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/api_altitude_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/altitude_text"
-                android:src="@drawable/ic_vertical_align_top_black_24dp" />
-
-        </LinearLayout>
-
         <TextView
             android:id="@+id/api_timestamp_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="" />
+            android:text=""
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/api_fetch_method_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="" />
+            android:text=""
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -171,4 +185,5 @@
             android:layout_marginRight="0dp"
             android:layout_marginEnd="0dp"/>
     </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

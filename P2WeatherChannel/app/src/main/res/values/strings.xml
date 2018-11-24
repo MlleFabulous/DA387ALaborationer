@@ -28,7 +28,8 @@
     <string name="temperature_sensor_not_available_text">Temperature sensor is not available!</string>
     <string name="humidity_sensor_not_available_text">Humidity sensor is not available!</string>
     <string name="altitude_sensor_not_available_text">Altitude sensor is not available!</string>
+    <string name="cant_calculate_altitude_without_pressure_text">Can\'t calculate altitude without pressure!</string>
+    <string name="cant_calculate_text">Can\'t calculate without sensors!</string>
 
     <string name="google_maps_key" translatable="false">AIzaSyBUrWhxtv8_q1URaZbV0iYN9w79aGECiHo</string>
-    <string name="cant_calculate_altitude_without_pressure_text">Can\'t calculate altitude without pressure!</string>
 </resources>

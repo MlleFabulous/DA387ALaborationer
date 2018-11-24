@@ -17,16 +17,19 @@ import android.widget.TextView;
  */
 public class APIFragment extends Fragment {
     //TODO: add TextView displaying coordinates.
-    private int weatherImageResource;
+    private static final String TAG = "APIFragment";
+    private TextView tvCoordinates;
+    private String coordinates;
+    private TextView tvWeather;
+    private String weather;
     private ImageView ivWeather;
+    private int weatherImageResource;
     private TextView tvPressure;
     private String pressure;
     private TextView tvTemperature;
     private String temperature;
     private TextView tvHumidity;
     private String humidity;
-    private TextView tvAltitude;
-    private String altitude;
     private TextView tvTimeStamp;
     private String timeStamp;
     private TextView tvFetchMethod;
@@ -50,11 +53,12 @@ public class APIFragment extends Fragment {
     }
 
     private void initializeComponents(View view, Bundle savedInstanceState) {
+        tvCoordinates = view.findViewById(R.id.api_coordinates_text_view);
+        tvWeather = view.findViewById(R.id.api_weather_text_view);
         ivWeather = view.findViewById(R.id.api_weather_image_view);
         tvPressure = view.findViewById(R.id.api_pressure_text_view);
         tvTemperature = view.findViewById(R.id.api_temperature_text_view);
         tvHumidity = view.findViewById(R.id.api_humidity_text_view);
-        tvAltitude = view.findViewById(R.id.api_altitude_text_view);
         tvTimeStamp = view.findViewById(R.id.api_timestamp_text_view);
         tvFetchMethod = view.findViewById(R.id.api_fetch_method_text_view);
         ButtonListener buttonListener = new ButtonListener();
@@ -63,6 +67,10 @@ public class APIFragment extends Fragment {
         btnAsync = view.findViewById(R.id.api_async_task_button);
         btnAsync.setOnClickListener(buttonListener);
         if (savedInstanceState != null){
+            coordinates = savedInstanceState.getString(coordinates);
+            tvCoordinates.setText(coordinates);
+            weather = savedInstanceState.getString("weather");
+            tvWeather.setText(weather);
             weatherImageResource = savedInstanceState.getInt("weatherImageResource");
             ivWeather.setImageResource(weatherImageResource);
             pressure = savedInstanceState.getString("pressure");
@@ -71,8 +79,6 @@ public class APIFragment extends Fragment {
             tvTemperature.setText(temperature);
             humidity = savedInstanceState.getString("humidity");
             tvHumidity.setText(humidity);
-            altitude = savedInstanceState.getString("altitude");
-            tvAltitude.setText(altitude);
             timeStamp = savedInstanceState.getString("timeStamp");
             tvTimeStamp.setText(timeStamp);
             fetchMethod = savedInstanceState.getString("fetchMethod");
@@ -84,26 +90,31 @@ public class APIFragment extends Fragment {
         this.controller = controller;
     }
 
-    public void setValues(int weatherImageResource, String pressure, String temperature, String humidity, String altitude, String time, String fetch){
+    public void setValues(String coordinates, String weather, int weatherImageResource, String pressure, String temperature, String humidity, String time, String fetch){
+        this.coordinates = coordinates;
+        if (tvCoordinates != null){
+            tvCoordinates.setText(this.coordinates);
+        }
+        this.weather = weather;
+        if (tvWeather != null){
+            tvWeather.setText(this.weather);
+        }
         this.weatherImageResource = weatherImageResource;
         if (ivWeather != null){
             ivWeather.setImageResource(weatherImageResource);
         }
-        this.pressure = pressure;
+        this.pressure = pressure + " hPa";
         if (tvPressure != null){
-            tvPressure.setText(this.pressure);
+            tvPressure.setText(this.pressure );
         }
-        this.temperature = temperature;
+//        int temp = Integer.parseInt(temperature);
+        this.temperature = temperature + " °C";
         if (tvTemperature != null){
             tvTemperature.setText(this.temperature);
         }
-        this.humidity = humidity;
+        this.humidity = humidity + " %";
         if (tvHumidity != null){
             tvHumidity.setText(this.humidity);
-        }
-        this.altitude = altitude;
-        if (tvAltitude != null){
-            tvAltitude.setText(this.altitude);
         }
         this.timeStamp = time;
         if (tvTimeStamp != null){
@@ -117,11 +128,12 @@ public class APIFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("coordinates", coordinates);
+        outState.putString("weather", weather);
         outState.putInt("weatherImageResource", weatherImageResource);
         outState.putString("pressure",pressure);
         outState.putString("temperature",temperature);
         outState.putString("humidity",humidity);
-        outState.putString("altitude",altitude);
         outState.putString("timeStamp", timeStamp);
         outState.putString("fetchMethod", fetchMethod);
         super.onSaveInstanceState(outState);
@@ -130,9 +142,9 @@ public class APIFragment extends Fragment {
     private class ButtonListener implements View.OnClickListener{
         public void onClick(View view) {
             if (view.getId()==btnAsync.getId()){
-                controller.requestOpenWeatherData("async");
+                controller.requestOpenWeatherData("async",TAG);
             } else if (view.getId() == btnVolley.getId()){
-                controller.requestOpenWeatherData("volley");
+                controller.requestOpenWeatherData("volley",TAG);
             }
         }
     }

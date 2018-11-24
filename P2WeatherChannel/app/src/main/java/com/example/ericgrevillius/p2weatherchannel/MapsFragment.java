@@ -13,9 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
@@ -23,10 +21,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, LocationListener {
+    private static final String TAG = "MapsFragment";
     private Controller controller;
     private MapView mapView;
     private GoogleMap map;
@@ -114,7 +112,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Locati
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                controller.setLocation(marker.getPosition());
+                controller.setLocation(marker.getPosition(), TAG);
                 return false;
             }
         });

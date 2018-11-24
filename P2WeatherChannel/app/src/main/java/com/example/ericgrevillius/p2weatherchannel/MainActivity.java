@@ -75,16 +75,16 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_map) {
             // Change to mapFragment
-            controller.showMapFragment();
+            controller.showMapFragment(false);
         } else if (id == R.id.nav_sensors) {
             // Change to sensorFragment
-            controller.showSensorFragment();
+            controller.showSensorFragment(false);
         } else if (id == R.id.nav_api) {
             // Change to apiFragment
-            controller.showAPIFragment();
+            controller.showAPIFragment(false);
         } else if (id == R.id.nav_difference) {
             // Change to DifferenceFragment
-            controller.showDifferenceFragment();
+            controller.showDifferenceFragment(false);
         }
 
         drawer.closeDrawer(GravityCompat.START);

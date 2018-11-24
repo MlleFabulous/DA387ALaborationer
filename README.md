@@ -26,3 +26,5 @@
 #13 SensorFragment and sensors seems to be working, needs testing on emulator.
 
 #14 Started working on DifferenceFragment and added some TODOs.
+
+#15 Finished functionality and worked out some bugs. Only minor adjustments in the .xml-filer for tweaking proper alignment and sizing for the pictures.

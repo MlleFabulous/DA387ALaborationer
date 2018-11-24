@@ -1,19 +1,14 @@
 package com.example.ericgrevillius.p2weatherchannel;
 
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +18,11 @@ import android.widget.TextView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SensorFragment extends Fragment implements SensorEventListener, LocationListener {
-    private TextView tvPressure;
+public class SensorFragment extends Fragment implements SensorEventListener{
+     private TextView tvPressure;
     private TextView tvTemperature;
     private TextView tvHumidity;
     private TextView tvAltitude;
-    private Controller controller;
-    private LocationManager locationManager;
     private SensorManager sensorManager;
     private Sensor pressureSensor;
     private boolean isPressureSensorPresent;
@@ -44,12 +37,11 @@ public class SensorFragment extends Fragment implements SensorEventListener, Loc
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sensor, container, false);
         initializeComponents(view);
-//        initializeLocation();
         initializeSensors();
         return view;
     }
@@ -61,9 +53,6 @@ public class SensorFragment extends Fragment implements SensorEventListener, Loc
         tvAltitude = view.findViewById(R.id.sensor_altitude_text_view);
     }
 
-//    private void initializeLocation() {
-//        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//    }
 
     private void initializeSensors() {
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -95,10 +84,6 @@ public class SensorFragment extends Fragment implements SensorEventListener, Loc
 
     }
 
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -111,30 +96,31 @@ public class SensorFragment extends Fragment implements SensorEventListener, Loc
         if (isHumiditySensorPresent){
             sensorManager.registerListener(this, humiditySensor,SensorManager.SENSOR_DELAY_NORMAL);
         }
-//        if(ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,1000,0,this);
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
-//        }
+
     }
 
     @Override
     public void onPause() {
-//        locationManager.removeUpdates(this);
         sensorManager.unregisterListener(this);
         super.onPause();
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        String text;
         if (sensorEvent.sensor.getType() == pressureSensor.getType()){
             float pressure = sensorEvent.values[0];
-            tvPressure.setText(pressure + " hPa");
+            text = "" + pressure + " hPa";
+            tvPressure.setText(text);
             float altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure);
-            tvAltitude.setText(altitude + " m above sea level");
+            text = "" + altitude + " m \nabove sea level";
+            tvAltitude.setText(text);
         } else if (sensorEvent.sensor.getType() == temperatureSensor.getType()){
-            tvTemperature.setText(sensorEvent.values[0] + " °C");
+            text = "" + sensorEvent.values[0] + " °C";
+            tvTemperature.setText(text);
         } else if (sensorEvent.sensor.getType() == humiditySensor.getType()){
-            tvTemperature.setText(sensorEvent.values[0] + " %");
+            text = "" + sensorEvent.values[0] + " %";
+            tvHumidity.setText(text);
         }
     }
 
@@ -143,23 +129,4 @@ public class SensorFragment extends Fragment implements SensorEventListener, Loc
 
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
 }
