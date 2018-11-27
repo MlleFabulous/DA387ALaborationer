@@ -30,3 +30,5 @@
 #15 Finished functionality and worked out some bugs. Only minor adjustments in the .xml-filer for tweaking proper alignment and sizing for the pictures.
 
 #16 Built UI and working on fuctionality, flashlight and automatic screen adjustment works well and the app can now request permission and check if it has permission.
+
+#17 Added a checkbox for if the light should auto adjust itself or not and minor name changes for the string variables in the string.xml.

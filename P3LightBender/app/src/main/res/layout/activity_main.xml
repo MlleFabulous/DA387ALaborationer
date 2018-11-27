@@ -16,7 +16,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Welcome!"
+        android:text="@string/welcome_text"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/instruction_text_view"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,12 +32,24 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
-        android:text="Below you can adjust your screens brightness"
+        android:text="@string/below_you_can_adjust_your_screens_brightness_text"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/brightness_seek_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/auto_brightness_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
+        android:checked="true"
+        android:text="@string/automatic_text"
+        app:layout_constraintBottom_toTopOf="@+id/radio_button_group"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <RadioGroup
         android:id="@+id/radio_button_group"
@@ -52,14 +64,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="System brightness" />
+            android:text="@string/system_brightness_text" />
 
         <RadioButton
             android:id="@+id/window_brightness_radio_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Window brightness" />
+            android:text="@string/window_brightness_text" />
     </RadioGroup>
 
     <SeekBar

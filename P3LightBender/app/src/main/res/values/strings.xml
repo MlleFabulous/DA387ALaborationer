@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">P3LightBender</string>
     <string name="no_light_sensor_text">You do not have a light-sensor</string>
+    <string name="below_you_can_adjust_your_screens_brightness_text">Below you can adjust your screens brightness</string>
+    <string name="welcome_text">Welcome!</string>
+    <string name="system_brightness_text">System brightness</string>
+    <string name="window_brightness_text">Window brightness</string>
+    <string name="automatic_text">Automatic</string>
 </resources>

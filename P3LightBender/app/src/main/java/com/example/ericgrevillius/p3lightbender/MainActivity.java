@@ -18,13 +18,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private static final int WRITE_SETTINGS = 1;
     private SensorManager sensorManager;
     private SensorListener sensorListener;
@@ -41,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton rbSystemBrightness;
     private RadioButton rbWindowBrightness;
     private TextView tvBrightness;
+    private CheckBox cbAutoBrightness;
     private float brightnessLevel;
     private ContentResolver contentResolver;
     private Window window;
@@ -102,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         window = getWindow();
         try {
             int lightLevel = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS);
+            Log.d(TAG, "initializeScreenBrightness: Light level: " + lightLevel);
             sbBrigthness.setProgress(lightLevel);
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
@@ -200,12 +206,24 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
+            cbAutoBrightness.setChecked(false);
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
 
+        }
+    }
+
+    private class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
+
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+            if (isChecked){
+                sensorManager.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            } else {
+                sensorManager.unregisterListener(sensorListener, lightSensor);
+            }
         }
     }
 }
