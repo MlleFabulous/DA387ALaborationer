@@ -28,3 +28,5 @@
 #14 Started working on DifferenceFragment and added some TODOs.
 
 #15 Finished functionality and worked out some bugs. Only minor adjustments in the .xml-filer for tweaking proper alignment and sizing for the pictures.
+
+#16 Built UI and working on fuctionality, flashlight and automatic screen adjustment works well and the app can now request permission and check if it has permission.

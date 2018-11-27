@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">P3LightBender</string>
+    <string name="no_light_sensor_text">You do not have a light-sensor</string>
 </resources>
