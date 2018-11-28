@@ -34,3 +34,5 @@
 #17 Added a checkbox for if the light should auto adjust itself or not and minor name changes for the string variables in the string.xml.
 
 #18 P4Pathfinder initialized.
+
+#19 P4Pathfinder TODOs initiated.
