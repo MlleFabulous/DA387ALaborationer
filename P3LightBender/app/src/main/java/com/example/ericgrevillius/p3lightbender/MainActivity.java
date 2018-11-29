@@ -245,11 +245,12 @@ public class MainActivity extends AppCompatActivity {
                     tvBrightness.setText("Very bright");
                 }
             }
+        }
 
-            @Override
-            public void onStartTrackingTouch (SeekBar seekBar){
-                cbAutoBrightness.setChecked(false);
-            }
+        @Override
+        public void onStartTrackingTouch (SeekBar seekBar){
+            cbAutoBrightness.setChecked(false);
+        }
 
             @Override
             public void onStopTrackingTouch (SeekBar seekBar){
@@ -257,16 +258,16 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        private class CheckBoxListener implements CompoundButton.OnCheckedChangeListener {
+    private class CheckBoxListener implements CompoundButton.OnCheckedChangeListener {
 
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    sensorManager.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
-                } else {
-                    sensorManager.unregisterListener(sensorListener, lightSensor);
-                }
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+            if (isChecked) {
+                sensorManager.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            } else {
+                sensorManager.unregisterListener(sensorListener, lightSensor);
             }
         }
     }
 }
+

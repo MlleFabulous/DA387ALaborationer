@@ -38,3 +38,5 @@
 #19 P4Pathfinder TODOs initiated.
 
 #20 bug fixes in P3LightBender where light is sensed and screen brightness and slider is changed.
+
+#21 syntax compilation error fix
