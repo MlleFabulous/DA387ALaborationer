@@ -6,4 +6,5 @@
     <string name="system_brightness_text">System brightness</string>
     <string name="window_brightness_text">Window brightness</string>
     <string name="automatic_text">Automatic</string>
+    <string name="very_dark_text">Very dark</string>
 </resources>
