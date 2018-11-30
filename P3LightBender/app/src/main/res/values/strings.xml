@@ -6,4 +6,9 @@
     <string name="system_brightness_text">System brightness</string>
     <string name="window_brightness_text">Window brightness</string>
     <string name="automatic_text">Automatic</string>
+    <string name="send_s_o_s_morse_message_text">Send S.O.S. morse message</string>
+    <string name="send_s_o_s_text">Send S.O.S.</string>
+    <string name="stop_s_o_s_text">Stop S.O.S.</string>
+    <string name="send_custom_morse_message_text">Send custom morse message</string>
+    <string name="custom_message_text">Custom message</string>
 </resources>

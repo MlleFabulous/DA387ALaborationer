@@ -32,3 +32,5 @@
 #16 Built UI and working on fuctionality, flashlight and automatic screen adjustment works well and the app can now request permission and check if it has permission.
 
 #17 Added a checkbox for if the light should auto adjust itself or not and minor name changes for the string variables in the string.xml.
+
+#18 Added Morse buttons in UI and functionality to parse a string into morse code and to show the morse code with the flashlight.

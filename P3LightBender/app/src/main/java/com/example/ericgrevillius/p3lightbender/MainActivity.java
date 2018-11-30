@@ -1,9 +1,9 @@
 package com.example.ericgrevillius.p3lightbender;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -19,17 +19,22 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.concurrent.ThreadPoolExecutor;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final int WRITE_SETTINGS = 1;
+    private static final long MORSE_UNIT = 500;
     private SensorManager sensorManager;
     private SensorListener sensorListener;
     private Sensor lightSensor;
@@ -40,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private String cameraID;
     private CameraCharacteristics cameraCharacteristics;
     private boolean isFlashLightEnabled;
-    private SeekBar sbBrigthness;
-    private SeekBarChangeListener seekBarListener;
+    private SeekBar sbBrightness;
     private RadioButton rbSystemBrightness;
     private RadioButton rbWindowBrightness;
     private TextView tvBrightness;
@@ -49,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
     private float brightnessLevel;
     private ContentResolver contentResolver;
     private Window window;
+    private Button btnSOSMorse;
+    private boolean isSendingSOS = false;
+    private Button btnCustomMorse;
+    private long lastSignal;
+    private long currentSignal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +101,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeComponents(){
-        sbBrigthness = findViewById(R.id.brightness_seek_bar);
+        sbBrightness = findViewById(R.id.brightness_seek_bar);
         if (isLightSensorPresent){
-            seekBarListener = new SeekBarChangeListener();
-            sbBrigthness.setOnSeekBarChangeListener(seekBarListener);
+            SeekBarChangeListener seekBarListener = new SeekBarChangeListener();
+            sbBrightness.setOnSeekBarChangeListener(seekBarListener);
         }
         rbSystemBrightness = findViewById(R.id.system_brightness_radio_button);
         rbWindowBrightness = findViewById(R.id.window_brightness_radio_button);
         tvBrightness = findViewById(R.id.brightness_text_view);
+        cbAutoBrightness = findViewById(R.id.auto_brightness_check_box);
+        cbAutoBrightness.setOnCheckedChangeListener(new CheckBoxListener());
+        ButtonListener buttonListener = new ButtonListener();
+        btnSOSMorse = findViewById(R.id.sos_button);
+        btnSOSMorse.setOnClickListener(buttonListener);
+        btnCustomMorse = findViewById(R.id.custom_morse_button);
+        btnCustomMorse.setOnClickListener(buttonListener);
     }
 
     private void initializeScreenBrightness() {
@@ -107,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
         window = getWindow();
         try {
             int lightLevel = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS);
-            Log.d(TAG, "initializeScreenBrightness: Light level: " + lightLevel);
-            sbBrigthness.setProgress(lightLevel);
+//            Log.d(TAG, "initializeScreenBrightness: Light level: " + lightLevel);
+            sbBrightness.setProgress(lightLevel);
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
         }
@@ -225,5 +241,213 @@ public class MainActivity extends AppCompatActivity {
                 sensorManager.unregisterListener(sensorListener, lightSensor);
             }
         }
+    }
+
+    private class ButtonListener implements View.OnClickListener{
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == btnSOSMorse.getId()){
+                if (!isSendingSOS) {
+                    isSendingSOS = true;
+                    sendMorseMessage(parseMorseMessage("SOS"));
+                    btnSOSMorse.setText(R.string.stop_s_o_s_text);
+                } else {
+                    isSendingSOS = false;
+                    btnSOSMorse.setText(R.string.send_s_o_s_text);
+                }
+            } else if (view.getId() == btnCustomMorse.getId()){
+
+            }
+        }
+    }
+
+    private String parseMorseMessage(String textToParse){
+        StringBuilder toReturn = new StringBuilder();
+        for (int i = 0; i < textToParse.length(); i++){
+            switch (textToParse.charAt(i)){
+                case 'A':
+                    toReturn.append(MorseCodeAlphabet.A );
+                    break;
+                case 'B':
+                    toReturn.append(MorseCodeAlphabet.B );
+                    break;
+                case 'C':
+                    toReturn.append(MorseCodeAlphabet.C );
+                    break;
+                case 'D':
+                    toReturn.append(MorseCodeAlphabet.D );
+                    break;
+                case 'E':
+                    toReturn.append(MorseCodeAlphabet.E );
+                    break;
+                case 'F':
+                    toReturn.append(MorseCodeAlphabet.F );
+                    break;
+                case 'G':
+                    toReturn.append(MorseCodeAlphabet.G );
+                    break;
+                case 'H':
+                    toReturn.append(MorseCodeAlphabet.H );
+                    break;
+                case 'I':
+                    toReturn.append(MorseCodeAlphabet.I );
+                    break;
+                case 'J':
+                    toReturn.append(MorseCodeAlphabet.J );
+                    break;
+                case 'K':
+                    toReturn.append(MorseCodeAlphabet.K );
+                    break;
+                case 'L':
+                    toReturn.append(MorseCodeAlphabet.L );
+                    break;
+                case 'M':
+                    toReturn.append(MorseCodeAlphabet.M );
+                    break;
+                case 'N':
+                    toReturn.append(MorseCodeAlphabet.N );
+                    break;
+                case 'O':
+                    toReturn.append(MorseCodeAlphabet.O );
+                    break;
+                case 'P':
+                    toReturn.append(MorseCodeAlphabet.P );
+                    break;
+                case 'Q':
+                    toReturn.append(MorseCodeAlphabet.Q );
+                    break;
+                case 'R':
+                    toReturn.append(MorseCodeAlphabet.R );
+                    break;
+                case 'S':
+                    toReturn.append(MorseCodeAlphabet.S );
+                    break;
+                case 'T':
+                    toReturn.append(MorseCodeAlphabet.T );
+                    break;
+                case 'U':
+                    toReturn.append(MorseCodeAlphabet.U );
+                    break;
+                case 'V':
+                    toReturn.append(MorseCodeAlphabet.V );
+                    break;
+                case 'W':
+                    toReturn.append(MorseCodeAlphabet.W );
+                    break;
+                case 'X':
+                    toReturn.append(MorseCodeAlphabet.X );
+                    break;
+                case 'Y':
+                    toReturn.append(MorseCodeAlphabet.Y );
+                    break;
+                case 'Z':
+                    toReturn.append(MorseCodeAlphabet.Z );
+                    break;
+                case 'Å':
+                    toReturn.append(MorseCodeAlphabet.Å );
+                    break;
+                case 'Ä':
+                    toReturn.append(MorseCodeAlphabet.Ä );
+                    break;
+                case 'Ö':
+                    toReturn.append(MorseCodeAlphabet.Ö );
+                    break;
+                case '0':
+                    toReturn.append(MorseCodeAlphabet.m0 );
+                    break;
+                case '1':
+                    toReturn.append(MorseCodeAlphabet.m1);
+                    break;
+                case '2':
+                    toReturn.append(MorseCodeAlphabet.m2);
+                    break;
+                case '3':
+                    toReturn.append(MorseCodeAlphabet.m3);
+                    break;
+                case '4':
+                    toReturn.append(MorseCodeAlphabet.m4);
+                    break;
+                case '5':
+                    toReturn.append(MorseCodeAlphabet.m5);
+                    break;
+                case '6':
+                    toReturn.append(MorseCodeAlphabet.m6);
+                    break;
+                case '7':
+                    toReturn.append(MorseCodeAlphabet.m7);
+                    break;
+                case '8':
+                    toReturn.append(MorseCodeAlphabet.m8);
+                    break;
+                case '9':
+                    toReturn.append(MorseCodeAlphabet.m9);
+                    break;
+                case ' ':
+                    toReturn.append("       ");
+                    break;
+            }
+            if(i < textToParse.length()-1){
+                if (textToParse.charAt(i) != ' '){
+                    toReturn.append("   ");
+                }
+            }
+        }
+        return toReturn.toString();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void sendMorseMessage(final String morseMessage) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    do{
+                        for (int i = 0; i < morseMessage.length(); i++){
+                            char signal = morseMessage.charAt(i);
+                            if (signal == '.'){
+                                if (!isFlashLightEnabled){
+                                    enableFlashLight(true);
+                                }
+                                Thread.sleep(MORSE_UNIT);
+                            } else if (signal == '-'){
+                                if (!isFlashLightEnabled){
+                                    enableFlashLight(true);
+                                }
+                                Thread.sleep(MORSE_UNIT *3);
+                            } else if(signal == ' '){
+                                if (isFlashLightEnabled){
+                                    enableFlashLight(false);
+                                }
+                                Thread.sleep(MORSE_UNIT);
+                            }
+                        }
+                        if (isFlashLightEnabled){
+                            enableFlashLight(false);
+                        }
+                        if (isSendingSOS){
+                            Thread.sleep(MORSE_UNIT * 7);
+                        }
+                    } while(isSendingSOS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        Log.d(TAG, "Thread Started");
+//        try {
+//            thread.join();
+//            Log.d(TAG, "Thread Joined");
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+//        new AsyncTask<String, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(String... messages) {
+//                return null;
+//            }
+//        }.execute(morseMessage);
+
     }
 }

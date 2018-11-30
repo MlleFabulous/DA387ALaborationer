@@ -1,0 +1,43 @@
+package com.example.ericgrevillius.p3lightbender;
+
+public class MorseCodeAlphabet {
+    static String A = ". -";
+    static String B = "- . . .";
+    static String C = "- . - .";
+    static String D = "- . .";
+    static String E = ".";
+    static String F = ". . - .";
+    static String G = "- - . ";
+    static String H = ". . . .";
+    static String I = ". . ";
+    static String J = ". - - -";
+    static String K = "- . -";
+    static String L = ". - . .";
+    static String M = "- -";
+    static String N = "- .";
+    static String O = "- - -";
+    static String P = ". - - .";
+    static String Q = "- - . -";
+    static String R = ". - .";
+    static String S = ". . .";
+    static String T = "-";
+    static String U = ". . -";
+    static String V = ". . . -";
+    static String W = ". - -";
+    static String X = "- . . -";
+    static String Y = "- . - -";
+    static String Z = "- - . .";
+    static String Å = ". - - . -";
+    static String Ä = ". - . -";
+    static String Ö = "- - - .";
+    static String m1 = ". - - - -";
+    static String m2 = ". . - - -";
+    static String m3 = ". . . - -";
+    static String m4 = ". . . . -";
+    static String m5 = ". . . . .";
+    static String m6 = "- . . . .";
+    static String m7 = "- - . . .";
+    static String m8 = "- - - . .";
+    static String m9 = "- - - - .";
+    static String m0 = "- - - - -";
+}
