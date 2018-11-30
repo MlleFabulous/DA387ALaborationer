@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnCustomMorse;
     private long lastSignal;
     private long currentSignal;
+    Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +74,12 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorListener = new SensorListener();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null){
+            if (sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null) {
                 proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
                 isProximitySensorPresent = true;
             }
         }
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) != null){
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) != null) {
             lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
             isLightSensorPresent = true;
         } else {
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             cameraManager = (CameraManager) getSystemService(CAMERA_SERVICE);
             try {
-                if (cameraManager != null){
+                if (cameraManager != null) {
                     cameraID = cameraManager.getCameraIdList()[0];
                     cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraID);
                 }
@@ -100,12 +101,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void initializeComponents(){
         sbBrightness = findViewById(R.id.brightness_seek_bar);
-        if (isLightSensorPresent){
-            SeekBarChangeListener seekBarListener = new SeekBarChangeListener();
-            sbBrightness.setOnSeekBarChangeListener(seekBarListener);
-        }
+
         rbSystemBrightness = findViewById(R.id.system_brightness_radio_button);
         rbWindowBrightness = findViewById(R.id.window_brightness_radio_button);
         tvBrightness = findViewById(R.id.brightness_text_view);
@@ -116,6 +115,12 @@ public class MainActivity extends AppCompatActivity {
         btnSOSMorse.setOnClickListener(buttonListener);
         btnCustomMorse = findViewById(R.id.custom_morse_button);
         btnCustomMorse.setOnClickListener(buttonListener);
+        if (isLightSensorPresent) {
+            SeekBarChangeListener seekBarListener = new SeekBarChangeListener();
+            sbBrightness.setOnSeekBarChangeListener(seekBarListener);
+            sbBrightness.setMax(100);
+        }
+
     }
 
     private void initializeScreenBrightness() {
@@ -130,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void enableFlashLight(boolean enabled){
+    private void enableFlashLight(boolean enabled) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
                 try {
@@ -145,22 +150,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeLightLevel(float brightness) {
         this.brightnessLevel = brightness;
-        if (rbSystemBrightness.isEnabled()){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                if (!Settings.System.canWrite(this)){
+        Log.d(TAG, "changeLightLevel: input " + brightness);
+//        Log.d(TAG, "changeLightLevel: saved " + brightnessLevel);
+        if (rbSystemBrightness.isEnabled()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.System.canWrite(this)) {
                     Intent i = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                     startActivity(i);
                 } else {
-                    Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, (int)(brightnessLevel*255 ));
+                    Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, (int) (brightnessLevel * 255));
+                    int debug = (int) (brightnessLevel * 255);
+//                    Log.d(TAG, "changeLightLevel:  set " + debug);
                 }
             } else {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS) == PackageManager.PERMISSION_DENIED){
-                    ActivityCompat.requestPermissions(this, new String []{android.Manifest.permission.WRITE_SETTINGS}, WRITE_SETTINGS);
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS) == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_SETTINGS}, WRITE_SETTINGS);
                 } else {
-                    Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, (int)(brightness*255));
+                    Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, (int) (brightnessLevel * 255));
                 }
             }
-        } else if (rbWindowBrightness.isEnabled()){
+        } else if (rbWindowBrightness.isEnabled()) {
             WindowManager.LayoutParams layoutParams = window.getAttributes();
             layoutParams.screenBrightness = brightnessLevel;
             window.setAttributes(layoutParams);
@@ -170,39 +179,56 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(isProximitySensorPresent){
-            sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
-        }
-        if (isLightSensorPresent){
-            sensorManager.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if (cbAutoBrightness.isChecked()) {
+            if (isProximitySensorPresent) {
+                sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+            }
+            if (isLightSensorPresent) {
+                sensorManager.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            }
         }
     }
 
     @Override
     protected void onPause() {
-        if (isLightSensorPresent || isProximitySensorPresent){
-            sensorManager.unregisterListener(sensorListener);
+        if (cbAutoBrightness.isChecked()) {
+            if (isLightSensorPresent || isProximitySensorPresent) {
+                sensorManager.unregisterListener(sensorListener);
+            }
+        }
+        if (isFlashLightEnabled) {
+            enableFlashLight(false);
         }
         super.onPause();
     }
-    private class SensorListener implements SensorEventListener{
+
+    private class SensorListener implements SensorEventListener {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
-            if (sensorEvent.sensor.getType() == proximitySensor.getType()){
+            if (sensorEvent.sensor.getType() == proximitySensor.getType()) {
                 float distanceFromPhone = sensorEvent.values[0];
-                if (distanceFromPhone < proximitySensor.getMaximumRange()){
-                    if (!isFlashLightEnabled){
+                if (distanceFromPhone < proximitySensor.getMaximumRange()) {
+                    if (!isFlashLightEnabled) {
                         enableFlashLight(true);
                     }
                 } else {
-                    if (isFlashLightEnabled){
+                    if (isFlashLightEnabled) {
                         enableFlashLight(false);
                     }
                 }
             } else if (sensorEvent.sensor.getType() == lightSensor.getType()) {
                 float lightLevel = sensorEvent.values[0];
-                if (lightLevel > 0 && lightLevel < 100){
-                    changeLightLevel(1/lightLevel);
+                if (lightLevel > 100) {
+                    lightLevel = 100.0f;
+                }
+                if (lightLevel > 0 && lightLevel <= 100) {
+//                    changeLightLevel(1/lightLevel);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        sbBrightness.setProgress((int) (lightLevel), true);
+                    } else {
+                        sbBrightness.setProgress((int) (lightLevel));
+                    }
+//                    Log.d(TAG, "onSensorChanged: " + lightLevel );
                 }
             }
         }
@@ -213,29 +239,45 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener{
+    private class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
+            if (i > 0) {
+                float lightLevel = i;
+                changeLightLevel(lightLevel / 100);
+//                Log.d(TAG, "onProgressChanged: " + i);
+//                Log.d(TAG, "onProgressChanged: " + lightLevel);
+                if (i < 20) {
+                    tvBrightness.setText(R.string.very_dark_text);
+                } else if (i < 40) {
+                    tvBrightness.setText("Quite dark");
+                } else if (i < 60) {
+                    tvBrightness.setText("Normal");
+                } else if (i < 80) {
+                    tvBrightness.setText("Quite bright");
+                } else {
+                    tvBrightness.setText("Very bright");
+                }
+            }
         }
 
         @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
+        public void onStartTrackingTouch (SeekBar seekBar){
             cbAutoBrightness.setChecked(false);
         }
 
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
+            @Override
+            public void onStopTrackingTouch (SeekBar seekBar){
 
+            }
         }
-    }
 
-    private class CheckBoxListener implements CompoundButton.OnCheckedChangeListener{
+    private class CheckBoxListener implements CompoundButton.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-            if (isChecked){
+            if (isChecked) {
                 sensorManager.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
             } else {
                 sensorManager.unregisterListener(sensorListener, lightSensor);
@@ -253,6 +295,14 @@ public class MainActivity extends AppCompatActivity {
                     btnSOSMorse.setText(R.string.stop_s_o_s_text);
                 } else {
                     isSendingSOS = false;
+                    if(thread.isAlive()){
+                        try {
+                            thread.interrupt();
+                            thread.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     btnSOSMorse.setText(R.string.send_s_o_s_text);
                 }
             } else if (view.getId() == btnCustomMorse.getId()){
@@ -397,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("StaticFieldLeak")
     private void sendMorseMessage(final String morseMessage) {
-        Thread thread = new Thread(new Runnable() {
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -429,25 +479,15 @@ public class MainActivity extends AppCompatActivity {
                         }
                     } while(isSendingSOS);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    enableFlashLight(false);
+                    Log.d(TAG, "Thread Interrupted");
+
                 }
             }
         });
         thread.start();
         Log.d(TAG, "Thread Started");
-//        try {
-//            thread.join();
-//            Log.d(TAG, "Thread Joined");
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
-//        new AsyncTask<String, Void, Void>() {
-//            @Override
-//            protected Void doInBackground(String... messages) {
-//                return null;
-//            }
-//        }.execute(morseMessage);
 
     }
 }
+

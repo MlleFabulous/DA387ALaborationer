@@ -33,4 +33,14 @@
 
 #17 Added a checkbox for if the light should auto adjust itself or not and minor name changes for the string variables in the string.xml.
 
-#18 Added Morse buttons in UI and functionality to parse a string into morse code and to show the morse code with the flashlight.
+#18 P4Pathfinder initialized.
+
+#19 P4Pathfinder TODOs initiated.
+
+#20 bug fixes in P3LightBender where light is sensed and screen brightness and slider is changed.
+
+#21 syntax compilation error fix
+
+#22 Added Morse buttons in UI and functionality to parse a string into morse code and to show the morse code with the flashlight.
+
+#23 Merge fix
