@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvBrightness;
     private CheckBox cbAutoBrightness;
     private float brightnessLevel;
+    private float lightLevel;
     private ContentResolver contentResolver;
     private Window window;
     private Button btnSOSMorse;
@@ -150,8 +151,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeLightLevel(float brightness) {
         this.brightnessLevel = brightness;
-        Log.d(TAG, "changeLightLevel: input " + brightness);
-//        Log.d(TAG, "changeLightLevel: saved " + brightnessLevel);
         if (rbSystemBrightness.isEnabled()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.System.canWrite(this)) {
@@ -159,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(i);
                 } else {
                     Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, (int) (brightnessLevel * 255));
-                    int debug = (int) (brightnessLevel * 255);
-//                    Log.d(TAG, "changeLightLevel:  set " + debug);
                 }
             } else {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SETTINGS) == PackageManager.PERMISSION_DENIED) {
@@ -179,10 +176,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (isProximitySensorPresent) {
+            sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
         if (cbAutoBrightness.isChecked()) {
-            if (isProximitySensorPresent) {
-                sensorManager.registerListener(sensorListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
-            }
             if (isLightSensorPresent) {
                 sensorManager.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
             }
@@ -191,13 +188,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if (cbAutoBrightness.isChecked()) {
-            if (isLightSensorPresent || isProximitySensorPresent) {
-                sensorManager.unregisterListener(sensorListener);
-            }
-        }
         if (isFlashLightEnabled) {
             enableFlashLight(false);
+        }
+        if (cbAutoBrightness.isChecked()) {
+            if (isLightSensorPresent) {
+                sensorManager.unregisterListener(sensorListener, lightSensor);
+            }
+        }
+        if (isProximitySensorPresent){
+            sensorManager.unregisterListener(sensorListener,proximitySensor);
         }
         super.onPause();
     }
@@ -206,29 +206,31 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
             if (sensorEvent.sensor.getType() == proximitySensor.getType()) {
-                float distanceFromPhone = sensorEvent.values[0];
-                if (distanceFromPhone < proximitySensor.getMaximumRange()) {
-                    if (!isFlashLightEnabled) {
-                        enableFlashLight(true);
-                    }
-                } else {
-                    if (isFlashLightEnabled) {
-                        enableFlashLight(false);
+                if (isLightSensorPresent){
+                    if (lightLevel < 20){
+                        float distanceFromPhone = sensorEvent.values[0];
+                        if (distanceFromPhone < proximitySensor.getMaximumRange()) {
+                            if (!isFlashLightEnabled) {
+                                enableFlashLight(true);
+                            }
+                        } else {
+                            if (isFlashLightEnabled) {
+                                enableFlashLight(false);
+                            }
+                        }
                     }
                 }
             } else if (sensorEvent.sensor.getType() == lightSensor.getType()) {
-                float lightLevel = sensorEvent.values[0];
+                lightLevel = sensorEvent.values[0];
                 if (lightLevel > 100) {
                     lightLevel = 100.0f;
                 }
-                if (lightLevel > 0 && lightLevel <= 100) {
-//                    changeLightLevel(1/lightLevel);
+                if (lightLevel > 0) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         sbBrightness.setProgress((int) (lightLevel), true);
                     } else {
                         sbBrightness.setProgress((int) (lightLevel));
                     }
-//                    Log.d(TAG, "onSensorChanged: " + lightLevel );
                 }
             }
         }
@@ -246,8 +248,6 @@ public class MainActivity extends AppCompatActivity {
             if (i > 0) {
                 float lightLevel = i;
                 changeLightLevel(lightLevel / 100);
-//                Log.d(TAG, "onProgressChanged: " + i);
-//                Log.d(TAG, "onProgressChanged: " + lightLevel);
                 if (i < 20) {
                     tvBrightness.setText(R.string.very_dark_text);
                 } else if (i < 40) {
@@ -267,20 +267,24 @@ public class MainActivity extends AppCompatActivity {
             cbAutoBrightness.setChecked(false);
         }
 
-            @Override
-            public void onStopTrackingTouch (SeekBar seekBar){
+        @Override
+        public void onStopTrackingTouch (SeekBar seekBar){
 
-            }
         }
+    }
 
     private class CheckBoxListener implements CompoundButton.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
             if (isChecked) {
-                sensorManager.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                if (isLightSensorPresent){
+                    sensorManager.registerListener(sensorListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                }
             } else {
-                sensorManager.unregisterListener(sensorListener, lightSensor);
+                if (isLightSensorPresent){
+                    sensorManager.unregisterListener(sensorListener, lightSensor);
+                }
             }
         }
     }
@@ -445,7 +449,6 @@ public class MainActivity extends AppCompatActivity {
         return toReturn.toString();
     }
 
-    @SuppressLint("StaticFieldLeak")
     private void sendMorseMessage(final String morseMessage) {
         thread = new Thread(new Runnable() {
             @Override
@@ -487,7 +490,6 @@ public class MainActivity extends AppCompatActivity {
         });
         thread.start();
         Log.d(TAG, "Thread Started");
-
     }
 }
 

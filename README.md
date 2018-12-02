@@ -44,3 +44,5 @@
 #22 Added Morse buttons in UI and functionality to parse a string into morse code and to show the morse code with the flashlight.
 
 #23 Merge fix
+
+#24 Minor bug fixes.

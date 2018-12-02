@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:checkedButton="@+id/system_brightness_radio_button"
         app:layout_constraintBottom_toTopOf="@id/brightness_seek_bar"
-        tools:orientation="horizontal">
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/system_brightness_radio_button"
