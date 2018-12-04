@@ -7,6 +7,10 @@
     <string name="window_brightness_text">Window brightness</string>
     <string name="automatic_text">Automatic</string>
     <string name="very_dark_text">Very dark</string>
+    <string name="quite_dark_text">Quite dark</string>
+    <string name="normal_text">Normal</string>
+    <string name="quite_bright_text">Quite bright</string>
+    <string name="very_bright_text">Very bright</string>
 
     <string name="send_s_o_s_morse_message_text">Send S.O.S. morse message</string>
     <string name="send_s_o_s_text">Send S.O.S.</string>

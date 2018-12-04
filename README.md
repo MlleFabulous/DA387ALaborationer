@@ -46,3 +46,5 @@
 #23 Merge fix
 
 #24 Minor bug fixes.
+
+#25 Correct morse-code sending and reading. Might need some tweaking or refactoring.
