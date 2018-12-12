@@ -48,3 +48,5 @@
 #24 Minor bug fixes.
 
 #25 Correct morse-code sending and reading. Might need some tweaking or refactoring.
+
+#26 Database and UI is almost done, will start working on Services, sensors and other logic/functions.
