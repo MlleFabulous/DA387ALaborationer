@@ -50,3 +50,5 @@
 #25 Correct morse-code sending and reading. Might need some tweaking or refactoring.
 
 #26 Database and UI is almost done, will start working on Services, sensors and other logic/functions.
+
+#27 Added additional tasks in P1SensationStation, these are just minor tweaks.

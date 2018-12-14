@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.Format;
+import java.util.Date;
+
 public class SensorActivity extends AppCompatActivity implements SensorEventListener {
     private TextView tvTitle;
     private TextView tvVendor;
@@ -138,6 +141,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
                 values.append(sensorEvent.values[i] + "\n");
             }
             setTvReadings(values.toString());
+            //TODO: make timestamps look nicer.
             setTvTimestamp("" + sensorEvent.timestamp);
             setTvAccuracy("" + sensorEvent.accuracy);
         }
