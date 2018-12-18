@@ -52,3 +52,7 @@
 #26 Database and UI is almost done, will start working on Services, sensors and other logic/functions.
 
 #27 Added additional tasks in P1SensationStation, these are just minor tweaks.
+
+#28 Worked on the StepService, UserActivity, DatabaseAccess, removed a TODO-comment in activity_main-xml and added some pictures for when the fingerprint sensor is not available and a ThreadPool for future usage.
+
+#29 Forgot to commit the README.md
