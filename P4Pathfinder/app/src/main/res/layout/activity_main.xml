@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- TODO: Create the UI for entire application -->
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"

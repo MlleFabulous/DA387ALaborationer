@@ -36,7 +36,6 @@ public class UserActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         //TODO: Start the service
-        //TODO: Find all the right sensors
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
