@@ -56,3 +56,5 @@
 #28 Worked on the StepService, UserActivity, DatabaseAccess, removed a TODO-comment in activity_main-xml and added some pictures for when the fingerprint sensor is not available and a ThreadPool for future usage.
 
 #29 Forgot to commit the README.md
+
+#30 Added fingerprint functionality, start working on register and sign in functions. Modified database so that steps will be logged under sessions and each session has its own ID.
