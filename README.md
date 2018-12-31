@@ -58,3 +58,5 @@
 #29 Forgot to commit the README.md
 
 #30 Added fingerprint functionality, start working on register and sign in functions. Modified database so that steps will be logged under sessions and each session has its own ID.
+
+#31 Finished sign up and sign in functions, needs testing and maybe some polishing.

@@ -17,6 +17,9 @@ public class User {
     @ColumnInfo(name = "password")
     private String password;
 
+    @ColumnInfo(name = "fingerprint_login")
+    private boolean fingerprintLogin;
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
@@ -40,5 +43,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setFingerprintLogin(boolean fingerprintLogin) {
+        this.fingerprintLogin = fingerprintLogin;
+    }
+
+    public boolean hasFingerprintLogin() {
+        return fingerprintLogin;
     }
 }

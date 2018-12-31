@@ -23,6 +23,9 @@ public interface DatabaseAccess {
     @Query("SELECT * FROM user_table WHERE username = :username;")
     User getUser(String username);
 
+    @Query("SELECT * FROM user_table WHERE fingerprint_login = :hasFingerprint")
+    List<User> getUserFingerprintLogin(boolean hasFingerprint);
+
     @Query("SELECT * FROM user_table;")
     List<User> getAllUsers();
 
