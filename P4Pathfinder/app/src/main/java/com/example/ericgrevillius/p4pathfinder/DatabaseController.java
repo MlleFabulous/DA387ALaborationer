@@ -200,4 +200,8 @@ public class DatabaseController {
         void resultLogin(String result);
         void resultFingerprintLogin(User user);
     }
+
+    public interface DatabaseSericeListener{
+
+    }
 }

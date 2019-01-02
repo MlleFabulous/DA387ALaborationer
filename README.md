@@ -62,3 +62,5 @@
 #31 Finished sign up and sign in functions, needs testing and maybe some polishing.
 
 #32 Sign in & Sign up in P4Pathfinder are tested and polished. Works perfectly! 
+
+#33 Struggle with Navigation drawer, Android studio has a new way of generating Navigation drawers but no documentation about it and there are no tutorials.

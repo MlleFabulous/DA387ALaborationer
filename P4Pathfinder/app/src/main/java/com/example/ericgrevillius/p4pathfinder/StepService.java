@@ -8,27 +8,31 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 
 import com.example.ericgrevillius.p4pathfinder.database.Database;
+import com.example.ericgrevillius.p4pathfinder.database.Step;
 
 public class StepService extends Service implements SensorEventListener {
     private LocalBinder binder;
     private StepChangeListener stepChangeListener;
-    private ThreadPool threadPool;
+    private DatabaseController databaseController;
     private SensorManager sensorManager;
     private Sensor accelerometerSensor;
     private boolean isAccelerometerPresent;
     private Sensor stepDetectorSensor;
     private boolean isStepDetectorPresent;
+    private Step step;
+    private float movement;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        //TODO: find the right sensor, most preferably the accelerometer.
         binder = new LocalBinder();
-        threadPool = new ThreadPool(2);
+        databaseController = new DatabaseController(getApplicationContext());
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
             accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -58,10 +62,15 @@ public class StepService extends Service implements SensorEventListener {
         return super.onUnbind(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        //TODO: handle sensor values
+        int sensorID = sensorEvent.sensor.getId();
+        if (sensorID == stepDetectorSensor.getId()){
 
+            //TODO: insert step into database
+//            Step step = new Step()
+        }
     }
 
     @Override
