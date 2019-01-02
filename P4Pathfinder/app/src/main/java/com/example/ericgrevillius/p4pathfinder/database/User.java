@@ -20,7 +20,14 @@ public class User {
     @ColumnInfo(name = "fingerprint_login")
     private boolean fingerprintLogin;
 
+    @Ignore
     public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(long userID, String username, String password) {
+        this.userID = userID;
         this.username = username;
         this.password = password;
     }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ericgrevillius.p4pathfinder">
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
 
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <!-- TODO: add the service and permissions -->
     <application
@@ -19,10 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".StepService" />
+
         <activity
             android:name=".UserActivity"
             android:label="@string/title_activity_user"></activity>
-        <service android:name=".StepService"/>
     </application>
 
 </manifest>

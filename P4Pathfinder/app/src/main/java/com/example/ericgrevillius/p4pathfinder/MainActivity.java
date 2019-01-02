@@ -3,15 +3,17 @@ package com.example.ericgrevillius.p4pathfinder;
 import android.app.KeyguardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements FingerprintQuesti
     private EditText editTextPassword;
     private Button buttonRegister;
     private Button buttonSignIn;
+    private String username;
+    private String password;
+    private boolean setFingerprint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements FingerprintQuesti
                     try {
                         CancellationSignal cancellationSignal = new CancellationSignal();
                         fingerprintManager.authenticate(cryptoObject, cancellationSignal, 0, fingerprintHandler, null);
+                        Log.d(TAG, "Fingerprint ready");
+
                     } catch (SecurityException e) {
                         e.printStackTrace();
                     }
@@ -143,40 +150,48 @@ public class MainActivity extends AppCompatActivity implements FingerprintQuesti
         }
     }
 
-    public void displayAlertDialogFragment(String message) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setTitle("Error");
-        alertDialogBuilder.setMessage(message);
-        alertDialogBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+    public void displayAlertDialogFragment(final String message) {
+        this.runOnUiThread(new Runnable() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
+            public void run() {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                alertDialogBuilder.setTitle("Error");
+                alertDialogBuilder.setMessage(message);
+                alertDialogBuilder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                alertDialogBuilder.create().show();
             }
         });
-        alertDialogBuilder.create().show();
     }
 
     @Override
     public void setFingerprintLogin(boolean hasFingerprint) {
-        if (hasFingerprint){
+        setFingerprint = hasFingerprint;
+        if (hasFingerprint) {
             databaseController.checkFingerprintLoginAvailability();
         } else {
-            resultFingerprintLogin(false);
+            databaseController.checkUsernameAvailability(username);
         }
     }
 
     @Override
     public void resultFingerprintLogin(boolean available) {
-        String username = editTextUsername.getText().toString();
-        databaseController.checkUsernameAvailability(username);
+        if (available) {
+            databaseController.checkUsernameAvailability(username);
+        } else {
+            displayAlertDialogFragment("Fingerprint login is not available. " +
+                    "\nAlready in use by another user.");
+        }
     }
 
     @Override
     public void resultUsername(boolean available) {
-        if(available){
-            String username = editTextUsername.getText().toString();
-            String password = editTextPassword.getText().toString();
-            databaseController.insertUser(username,password,available);
+        if (available) {
+            databaseController.insertUser(username, password, available);
         } else {
             displayAlertDialogFragment("Username is taken.");
         }
@@ -184,15 +199,18 @@ public class MainActivity extends AppCompatActivity implements FingerprintQuesti
 
     @Override
     public void resultLogin(String result) {
-        if (result.matches("Success")){
-//            Intent login = new Intent(this, UserActivity.class);
-//            login.putExtra("username", editTextUsername.getText().toString());
-//            startActivity(login);
-        } else if (result.matches("No user")){
-        } else if (result.matches("Wrong password")){
+        if (result.matches("Success")) {
+            Intent login = new Intent(this, UserActivity.class);
+            login.putExtra("username", editTextUsername.getText().toString());
+            startActivity(login);
+        } else {
+            if (result.matches("No user")) {
 
+            } else if (result.matches("Wrong password")) {
+
+            }
+            displayAlertDialogFragment(result);
         }
-        displayAlertDialogFragment(result);
     }
 
     @Override
@@ -206,22 +224,31 @@ public class MainActivity extends AppCompatActivity implements FingerprintQuesti
         databaseController.login(username, password);
     }
 
-    private class ButtonListener implements View.OnClickListener{
-
+    private class ButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
             int viewID = view.getId();
-            if (viewID == buttonRegister.getId()){
-                //Register
-                FingerprintQuestionFragment fingerprintQuestionFragment = FingerprintQuestionFragment.newInstance();
-                fingerprintQuestionFragment.setOnDialogListener(MainActivity.this);
-                fingerprintQuestionFragment.show(getSupportFragmentManager(),FINGERPRINT_QUESTION_FRAGMENT_TAG);
-            } else if (viewID == buttonSignIn.getId()) {
-                //Sign In
-                String username = editTextUsername.getText().toString();
-                String password = editTextPassword.getText().toString();
-                login(username,password);
-            }
+            username = editTextUsername.getText().toString();
+            password = editTextPassword.getText().toString();
+            if (!username.isEmpty() && !password.isEmpty())
+                if (viewID == buttonRegister.getId()) {
+                    //Register
+                    FingerprintQuestionFragment fingerprintQuestionFragment = FingerprintQuestionFragment.newInstance();
+                    fingerprintQuestionFragment.setOnDialogListener(MainActivity.this);
+                    fingerprintQuestionFragment.show(getSupportFragmentManager(), FINGERPRINT_QUESTION_FRAGMENT_TAG);
+                } else if (viewID == buttonSignIn.getId()) {
+                    //Sign In
+                    String username = editTextUsername.getText().toString();
+                    String password = editTextPassword.getText().toString();
+                    login(username, password);
+                } else {
+                    if (username.isEmpty()) {
+                        editTextUsername.setHintTextColor(Color.RED);
+                    }
+                    if (password.isEmpty()) {
+                        editTextPassword.setHintTextColor(Color.RED);
+                    }
+                }
         }
 
     }

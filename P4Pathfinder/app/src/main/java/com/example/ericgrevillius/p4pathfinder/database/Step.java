@@ -51,6 +51,17 @@ public class Step {
         return stepID;
     }
 
+    public void setStepID(long stepID) {
+        this.stepID = stepID;
+    }
+
+    public String getMovement() {
+        return movement;
+    }
+
+    public void setMovement(String movement) {
+        this.movement = movement;
+    }
 
     public long getDate() {
         return date;
