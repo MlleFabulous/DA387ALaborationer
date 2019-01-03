@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_view_concert"
+            android:icon="@drawable/ic_event_black_24dp"
+            android:title="View concert on map " />
+        <item
+            android:id="@+id/nav_view_previous_concerts"
+            android:icon="@drawable/ic_alarm_on_black_24dp"
+            android:title="View previous concerts" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_perm_identity_black_24dp"
+            android:title="Log out" />
+    </group>
+
+    <item android:title="Settings"
+        android:icon="@drawable/ic_menu_manage">
+        <menu>
+            <item
+                android:id="@+id/nav_language"
+                android:icon="@drawable/ic_language_black_24dp"
+                android:title="Change language" />
+            <item
+                android:id="@+id/nav_modes"
+                android:icon="@drawable/ic_wb_sunny_black_24dp"
+                android:title="mode" />
+        </menu>
+    </item>
+</menu>
