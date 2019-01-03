@@ -11,18 +11,19 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SessionHistoryFragment extends Fragment {
+public class AccountFragment extends Fragment {
     private UserController controller;
 
-    public SessionHistoryFragment() {
+    public AccountFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_session_history, container, false);
+        return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
     public void setController(UserController controller) {

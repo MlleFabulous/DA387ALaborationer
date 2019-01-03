@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements FingerprintQuesti
     public void resultLogin(String result) {
         if (result.matches("Success")) {
             Intent login = new Intent(this, UserActivity.class);
-            login.putExtra("username", editTextUsername.getText().toString());
+            login.putExtra("username", username);
             startActivity(login);
         } else {
             if (result.matches("No user")) {
@@ -215,8 +215,8 @@ public class MainActivity extends AppCompatActivity implements FingerprintQuesti
 
     @Override
     public void resultFingerprintLogin(User user) {
-        String username = user.getUsername();
-        String password = user.getPassword();
+        username = user.getUsername();
+        password = user.getPassword();
         login(username, password);
     }
 

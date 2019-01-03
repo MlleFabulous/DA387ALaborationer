@@ -66,3 +66,5 @@
 #33 Struggle with Navigation drawer, Android studio has a new way of generating Navigation drawers but no documentation about it and there are no tutorials.
 
 #34 Replaced Navigation drawer with an old Navigation drawer from an old project.
+
+#35 Worked on making the CurrentSessionFragment to work and start the same service on different occations. Deleted many unused files and added the pictures I will need for the Navigation drawer and other implementations in the future for P4Pathfinder.
