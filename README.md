@@ -68,3 +68,5 @@
 #34 Replaced Navigation drawer with an old Navigation drawer from an old project.
 
 #35 Worked on making the CurrentSessionFragment to work and start the same service on different occations. Deleted many unused files and added the pictures I will need for the Navigation drawer and other implementations in the future for P4Pathfinder.
+
+#36 Implemented rotation of the compass in CurrentSessionFragment that uses the accelerometer and magnetometer, added a permission in the manifest that might be used in the future.

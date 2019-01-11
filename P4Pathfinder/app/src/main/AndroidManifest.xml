@@ -3,6 +3,7 @@
     package="com.example.ericgrevillius.p4pathfinder">
 
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
