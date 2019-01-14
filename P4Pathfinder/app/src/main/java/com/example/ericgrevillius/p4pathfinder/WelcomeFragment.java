@@ -37,6 +37,8 @@ public class WelcomeFragment extends Fragment {
         ButtonListener buttonListener = new ButtonListener();
         newSessionButton = view.findViewById(R.id.welcome_new_session_button);
         newSessionButton.setOnClickListener(buttonListener);
+        sessionHistoryButton = view.findViewById(R.id.welcome_session_history_button);
+        sessionHistoryButton.setOnClickListener(buttonListener);
         if (savedInstanceState != null){
             message = savedInstanceState.getString(MESSAGE_TAG);
         }
@@ -66,7 +68,6 @@ public class WelcomeFragment extends Fragment {
         public void onClick(View view) {
             int viewID = view.getId();
             if (viewID == newSessionButton.getId()){
-                //TODO: start a new session;
                 controller.displaySessionFragment();
             }
             if (viewID == sessionHistoryButton.getId()){

@@ -19,6 +19,7 @@ public class UserActivity extends AppCompatActivity
     private final static String TAG = "UserActivity";
     private Toolbar toolbar;
     private UserController controller;
+    private String currentFragmentTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +29,10 @@ public class UserActivity extends AppCompatActivity
         initializeDrawer();
         initializeNavigationView();
         String username = getIntent().getStringExtra("username");
-        controller = new UserController(this);
+        controller = new UserController(this , savedInstanceState);
         if (username != null){
             controller.setUsername(username);
         }
-        controller.displayWelcomeFragment();
     }
 
     private void initializeToolbar() {
@@ -54,6 +54,7 @@ public class UserActivity extends AppCompatActivity
     }
 
     public void setFragment(Fragment fragment, String tag, boolean backStack){
+        currentFragmentTag = tag;
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.user_fragment_placeholder,fragment,tag);
@@ -91,5 +92,11 @@ public class UserActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("lastFragmentTag", currentFragmentTag);
+        super.onSaveInstanceState(outState);
     }
 }

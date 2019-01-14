@@ -24,14 +24,13 @@ public class Step {
     @ColumnInfo(name = "step_date")
     private long date;
 
-
+    @Ignore
     public Step(long sessionID, String movement, long date) {
         this.sessionID = sessionID;
         this.movement = movement;
         this.date = date;
     }
 
-    @Ignore
     public Step(long sessionID, long stepID, String movement, long date) {
         this.sessionID = sessionID;
         this.stepID = stepID;

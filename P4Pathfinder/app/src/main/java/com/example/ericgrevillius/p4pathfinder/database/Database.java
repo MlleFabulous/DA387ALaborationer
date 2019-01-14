@@ -5,7 +5,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@android.arch.persistence.room.Database(entities = {User.class, Step.class}, version = 1, exportSchema = false)
+@android.arch.persistence.room.Database(entities = {User.class, StepSession.class, Step.class}, version = 4, exportSchema = false)
 public abstract class Database extends RoomDatabase {
     private static final String TAG = "Database";
     public abstract DatabaseAccess databaseAccess();

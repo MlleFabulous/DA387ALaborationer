@@ -70,3 +70,8 @@
 #35 Worked on making the CurrentSessionFragment to work and start the same service on different occations. Deleted many unused files and added the pictures I will need for the Navigation drawer and other implementations in the future for P4Pathfinder.
 
 #36 Implemented rotation of the compass in CurrentSessionFragment that uses the accelerometer and magnetometer, added a permission in the manifest that might be used in the future.
+
+#37 Service and SessionDialogFragment is implemented. Changes made in the database and it's on version 4 at the moment. 
+	A SessionHistoryAdapter was made for the ListView in SessionHistoryFragment, which only displays the sessions date and total amount of steps.
+	A lot of bugs and errors were fixed in the StepService where too many or no steps registered and then only walking steps.
+	

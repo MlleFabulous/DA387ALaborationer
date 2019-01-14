@@ -40,7 +40,7 @@
             android:text="@string/start_a_new_session_text" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/welcome_session_history_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/view_previous_sessions_text" />

@@ -1,11 +1,13 @@
 package com.example.ericgrevillius.p4pathfinder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +40,11 @@ public class CurrentSessionFragment extends Fragment implements SensorEventListe
     private float [] lastMagnetometer;
     private boolean isLastAccelerometerSet;
     private boolean isLastMagnetometerSet;
+    private StepServiceConnection serviceConnection;
+    private Intent stepsIntent;
+    StepService service;
+    boolean isServiceBound;
+    private long sessionID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +71,14 @@ public class CurrentSessionFragment extends Fragment implements SensorEventListe
         startStopSessionButton.setOnClickListener(buttonListener);
         sessionInformationButton = view.findViewById(R.id.current_session_information_button);
         sessionInformationButton.setOnClickListener(buttonListener);
+        if (savedInstanceState != null){
+            isServiceBound = savedInstanceState.getBoolean("isServiceBound");
+        }
+        if (isServiceBound){
+            startStopSessionButton.setText(R.string.stop_session_text);
+            sessionInformationButton.setEnabled(true);
+        }
+
     }
 
     public void setController(UserController controller) {
@@ -92,15 +107,21 @@ public class CurrentSessionFragment extends Fragment implements SensorEventListe
         super.onPause();
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean("isServiceBound", isServiceBound);
+        super.onSaveInstanceState(outState);
+    }
+
     private void animateImageView(float angleInDegrees) {
-        RotateAnimation rotateAnimation = new RotateAnimation(currentDegree,angleInDegrees,
+        RotateAnimation rotateAnimation = new RotateAnimation(currentDegree, - angleInDegrees,
                 Animation.RELATIVE_TO_SELF,0.5f,
                 Animation.RELATIVE_TO_SELF,0.5f);
         rotateAnimation.setDuration(250);
         rotateAnimation.setFillAfter(true);
         compassImageView.startAnimation(rotateAnimation);
         lastDegree = currentDegree;
-        currentDegree = angleInDegrees;
+        currentDegree =  - angleInDegrees;
     }
 
     @Override
@@ -115,8 +136,8 @@ public class CurrentSessionFragment extends Fragment implements SensorEventListe
             double total = Math.sqrt(x*x + y*y + z*z);
             if (total > 20){
 //                Log.d(TAG, "onSensorChanged: ");
-                animateImageView(360f);
-                animateImageView(lastDegree);
+                animateImageView( currentDegree + 360f);
+                animateImageView(currentDegree - 360f);
             }
         }
         if (sensorEvent.sensor == magnetometer){
@@ -137,7 +158,13 @@ public class CurrentSessionFragment extends Fragment implements SensorEventListe
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
+    }
 
+    public void setSessionID(long sessionID) {
+        this.sessionID = sessionID;
+        if (this.isVisible()) {
+            controller.displaySessionDialogFragment(isServiceBound, this.sessionID);
+        }
     }
 
     private class ButtonListener implements View.OnClickListener {
@@ -145,10 +172,25 @@ public class CurrentSessionFragment extends Fragment implements SensorEventListe
         public void onClick(View view) {
             int id = view.getId();
             if (id == startStopSessionButton.getId()) {
-                //TODO: Start session
-            }
-            if (id == sessionInformationButton.getId()) {
-                //TODO; display a dialogfragment with session information
+                if (getActivity() != null){
+                    if (isServiceBound){ //stop service
+                        stepsIntent = new Intent(getActivity(), StepService.class);
+                        getActivity().stopService(stepsIntent);
+                        isServiceBound = false;
+                        startStopSessionButton.setText(getString(R.string.start_session_text));
+                        controller.searchForSessions(-1,-1);
+                    } else { //start service
+                        serviceConnection = new StepServiceConnection(CurrentSessionFragment.this);
+                        stepsIntent = new Intent(getActivity(),StepService.class);
+                        stepsIntent.putExtra("username", controller.getUsername());
+                        isServiceBound = true;
+                        getActivity().startService(stepsIntent);
+                        startStopSessionButton.setText(getString(R.string.stop_session_text));
+                    }
+                    sessionInformationButton.setEnabled(isServiceBound);
+                }
+            } else if (id == sessionInformationButton.getId()) {
+                controller.searchForSessions(-1,-1);
             }
         }
     }

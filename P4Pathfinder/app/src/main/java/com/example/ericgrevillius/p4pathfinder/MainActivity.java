@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements FingerprintQuesti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        databaseController = new DatabaseController(this);
+        databaseController = DatabaseController.getInstance(this);
         databaseController.setDatabaseLoginListener(this);
         initializeComponents(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -215,9 +215,13 @@ public class MainActivity extends AppCompatActivity implements FingerprintQuesti
 
     @Override
     public void resultFingerprintLogin(User user) {
-        username = user.getUsername();
-        password = user.getPassword();
-        login(username, password);
+        if (user != null){
+            username = user.getUsername();
+            password = user.getPassword();
+            login(username, password);
+        } else {
+            displayAlertDialogFragment("There is no user with Fingerprint login feature.");
+        }
     }
 
     private void login(String username, String password) {

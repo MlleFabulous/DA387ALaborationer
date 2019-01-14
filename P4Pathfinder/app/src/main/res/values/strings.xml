@@ -32,9 +32,6 @@
     <string name="session_text">Session</string>
     <string name="history_text">History</string>
     <string name="account_text">Account</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="would_you_like_to_text">Would you like to:</string>
     <string name="start_a_new_session_text">Start a new session</string>
     <string name="view_previous_sessions_text">View previous sessions</string>
@@ -42,6 +39,11 @@
     <string name="re_enter_password_text">Re-enter password</string>
     <string name="fingerprint_login_feature_text">Fingerprint login feature</string>
     <string name="save_text">Save</string>
+    <string name="stop_session_text">Stop session</string>
+    <string name="warning_text">Warning!</string>
+    <string name="clear_history_text">Clear history</string>
+    <string name="select_from_date_text">Select from date</string>
+    <string name="select_to_date_text">select to date</string>
+    <string name="close_text">Close</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
 </resources>

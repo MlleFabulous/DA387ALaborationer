@@ -15,6 +15,9 @@ public interface DatabaseAccess {
     void insertUser(User... users);
 
     @Insert
+    void insertSession(StepSession... stepSessions);
+
+    @Insert
     void insertStep(Step... steps);
 
     @Update
@@ -29,5 +32,30 @@ public interface DatabaseAccess {
     @Query("SELECT * FROM user_table;")
     List<User> getAllUsers();
 
-//    @Query("SELECT * FROM step_table WHERE user_id = :userID")
+    @Query("SELECT * FROM step_session_table WHERE user_id = :userID")
+    List<StepSession> getUsersSessions(long userID);
+
+    @Query("SELECT * FROM step_session_table WHERE user_id = :userID AND session_date <= :toDate")
+    List<StepSession> getUsersSessionsTo(long userID, long toDate);
+
+    @Query("SELECT * FROM step_session_table WHERE user_id = :userID AND session_date >= :fromDate")
+    List<StepSession> getUsersSessionsFrom(long userID, long fromDate);
+
+    @Query("SELECT * FROM step_session_table WHERE user_id = :userID AND session_date BETWEEN :fromDate AND :toDate")
+    List<StepSession> getUsersSessionsFromTo(long userID, long fromDate, long toDate);
+
+    @Query("SELECT count(step_id) FROM step_table WHERE session_id = :sessionID")
+    int getTotalSteps(long sessionID);
+
+    @Query("SELECT count(step_id) FROM step_table WHERE session_id = :sessionID AND step_movement = :typeMovement")
+    int getTypeSteps(long sessionID, String typeMovement);
+
+    @Query("DELETE FROM step_session_table WHERE user_id = :userID")
+    void deleteAllSessions(long userID);
+
+    @Query("DELETE FROM step_table WHERE session_id = :sessionID")
+    void deleteAllSteps(long sessionID);
+
+    @Query("SELECT * FROM step_session_table WHERE session_id = :sessionID")
+    StepSession getSession(long sessionID);
 }
