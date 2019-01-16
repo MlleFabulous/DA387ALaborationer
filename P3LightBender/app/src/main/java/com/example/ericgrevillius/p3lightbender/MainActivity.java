@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeLightLevel(float brightness) {
         this.brightnessLevel = brightness;
-        if (rbSystemBrightness.isEnabled()) {
+        if (rbSystemBrightness.isChecked()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.System.canWrite(this)) {
                     Intent i = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, (int) (brightnessLevel * 255));
                 }
             }
-        } else if (rbWindowBrightness.isEnabled()) {
+        } else if (rbWindowBrightness.isChecked()) {
             WindowManager.LayoutParams layoutParams = window.getAttributes();
             layoutParams.screenBrightness = brightnessLevel;
             window.setAttributes(layoutParams);

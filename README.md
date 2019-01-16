@@ -75,3 +75,4 @@
 	A SessionHistoryAdapter was made for the ListView in SessionHistoryFragment, which only displays the sessions date and total amount of steps.
 	A lot of bugs and errors were fixed in the StepService where too many or no steps registered and then only walking steps.
 	
+#38 Error fix with some if-statements in P3LightBender.
