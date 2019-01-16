@@ -76,3 +76,5 @@
 	A lot of bugs and errors were fixed in the StepService where too many or no steps registered and then only walking steps.
 	
 #38 Error fix with some if-statements in P3LightBender.
+
+#39 String format fix in P4Pathfinder.

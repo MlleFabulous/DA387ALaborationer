@@ -146,7 +146,9 @@ public class SessionDialogFragment extends DialogFragment {
         } catch (ArithmeticException e){
             percent = 0.0;
         }
-        walkingPercent = String.format(getActivity().getResources().getConfiguration().locale,"%.1f", percent) + " %";
+        if (getActivity() != null){
+            walkingPercent = String.format(getActivity().getResources().getConfiguration().locale,"%.1f", percent) + " %";
+        }
         if (walkingPercentTextView != null){
             walkingPercentTextView.setText(walkingPercent);
         }
@@ -159,7 +161,9 @@ public class SessionDialogFragment extends DialogFragment {
         } catch (ArithmeticException e){
             //percent is already 0
         }
-        runningPercent = String.format(getActivity().getResources().getConfiguration().locale,"%.1f", percent) + " %";
+        if (getActivity() != null){
+            runningPercent = String.format(getActivity().getResources().getConfiguration().locale,"%.1f", percent) + " %";
+        }
         if (runningPercentTextView != null){
             runningPercentTextView.setText(runningPercent);
         }
