@@ -31,5 +31,5 @@
     <string name="cant_calculate_altitude_without_pressure_text">Can\'t calculate altitude without pressure!</string>
     <string name="cant_calculate_text">Can\'t calculate without sensors!</string>
 
-    <string name="google_maps_key" translatable="false">AIzaSyBUrWhxtv8_q1URaZbV0iYN9w79aGECiHo</string>
+    <string name="google_maps_key" translatable="false"><!-- Insert API Key here --></string>
 </resources>

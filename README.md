@@ -87,4 +87,4 @@
 
 #43 Added feature to P4Pathfinder where it will now display steps per second.
 
-
+#44 Repo is now ready to go public.
