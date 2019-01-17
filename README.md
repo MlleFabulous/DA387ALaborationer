@@ -82,3 +82,5 @@
 #40 Implemented better Fragment management in P2WeatherChannel where the backstack is used.
 
 #41 Updated gradle files in P1SensationStation.
+
+#42 Added zip-files for all the project to turn in. Highest grade on the evaluation from the teacher!! <3
