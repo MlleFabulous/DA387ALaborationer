@@ -80,3 +80,5 @@
 #39 String format fix in P4Pathfinder.
 
 #40 Implemented better Fragment management in P2WeatherChannel where the backstack is used.
+
+#41 Updated gradle files in P1SensationStation.
