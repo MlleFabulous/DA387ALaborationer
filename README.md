@@ -78,3 +78,5 @@
 #38 Error fix with some if-statements in P3LightBender.
 
 #39 String format fix in P4Pathfinder.
+
+#40 Implemented better Fragment management in P2WeatherChannel where the backstack is used.

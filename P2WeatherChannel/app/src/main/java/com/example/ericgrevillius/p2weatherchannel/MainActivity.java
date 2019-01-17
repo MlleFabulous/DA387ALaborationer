@@ -1,6 +1,7 @@
 package com.example.ericgrevillius.p2weatherchannel;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private Controller controller;
+    private String currentFragmentTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +29,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -37,18 +38,23 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        controller = new Controller(this);
+        if (savedInstanceState != null){
+            currentFragmentTag = savedInstanceState.getString("currentFragmentTag");
+        }
+        controller = new Controller(this, currentFragmentTag);
     }
 
     public void setFragment(Fragment fragment, String tag, boolean backStack){
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.frame_layout_placeholder,fragment,tag);
-        if (backStack){
-            ft.addToBackStack(null);
+        if (!tag.equals(currentFragmentTag)){
+            currentFragmentTag = tag;
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.frame_layout_placeholder,fragment,tag);
+            if (backStack){
+                ft.addToBackStack(null);
+            }
+            ft.commit();
         }
-        ft.commit();
     }
 
     @Override
@@ -75,19 +81,25 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_map) {
             // Change to mapFragment
-            controller.showMapFragment(false);
+            controller.showMapFragment(true);
         } else if (id == R.id.nav_sensors) {
             // Change to sensorFragment
-            controller.showSensorFragment(false);
+            controller.showSensorFragment(true);
         } else if (id == R.id.nav_api) {
             // Change to apiFragment
-            controller.showAPIFragment(false);
+            controller.showAPIFragment(true);
         } else if (id == R.id.nav_difference) {
             // Change to DifferenceFragment
-            controller.showDifferenceFragment(false);
+            controller.showDifferenceFragment(true);
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("currentFragmentTag", currentFragmentTag);
+        super.onSaveInstanceState(outState);
     }
 }

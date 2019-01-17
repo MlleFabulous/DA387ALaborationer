@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -21,7 +22,7 @@ import java.util.Locale;
 import java.util.Scanner;
 
 class Controller {
-//    private static final String TAG = "Controller";
+    //    private static final String TAG = "Controller";
     private static final String API_FRAGMENT_TAG = "APIFragment";
     private static final String DIFFERENCE_FRAGMENT_TAG = "DifferenceFragment";
     private static final String MAPS_FRAGMENT_TAG = "MapsFragment";
@@ -35,19 +36,35 @@ class Controller {
     private LatLng location;
     private String respondTo;
 
-    Controller(MainActivity activity){
+    Controller(MainActivity activity, String currentFragmentTag) {
         context = activity;
         openWeatherAPI = new OpenWeatherAPI(context, new VolleyListener());
         initializeAPIFragment();
         initializeDifferenceFragment();
         initializeMapsFragment();
         initializeSensorFragment();
-        showMapFragment(false);
+        if (currentFragmentTag != null) {
+            switch (currentFragmentTag) {
+                case API_FRAGMENT_TAG:
+                    showAPIFragment(false);
+                    break;
+                case DIFFERENCE_FRAGMENT_TAG:
+                    showDifferenceFragment(false);
+                    break;
+                case SENSOR_FRAGMENT_TAG:
+                    showSensorFragment(false);
+                    break;
+                default:
+                    showMapFragment(false);
+            }
+        } else {
+            showMapFragment(false);
+        }
     }
 
     private void initializeAPIFragment() {
         apiFragment = (APIFragment) context.getSupportFragmentManager().findFragmentByTag(API_FRAGMENT_TAG);
-        if (apiFragment == null){
+        if (apiFragment == null) {
             apiFragment = new APIFragment();
         }
         apiFragment.setController(this);
@@ -55,7 +72,7 @@ class Controller {
 
     private void initializeDifferenceFragment() {
         differenceFragment = (DifferenceFragment) context.getSupportFragmentManager().findFragmentByTag(DIFFERENCE_FRAGMENT_TAG);
-        if (differenceFragment == null){
+        if (differenceFragment == null) {
             differenceFragment = new DifferenceFragment();
         }
         differenceFragment.setController(this);
@@ -63,7 +80,7 @@ class Controller {
 
     private void initializeMapsFragment() {
         mapsFragment = (MapsFragment) context.getSupportFragmentManager().findFragmentByTag(MAPS_FRAGMENT_TAG);
-        if (mapsFragment == null){
+        if (mapsFragment == null) {
             mapsFragment = new MapsFragment();
         }
         mapsFragment.setController(this);
@@ -71,33 +88,33 @@ class Controller {
 
     private void initializeSensorFragment() {
         sensorFragment = (SensorFragment) context.getSupportFragmentManager().findFragmentByTag(SENSOR_FRAGMENT_TAG);
-        if (sensorFragment == null){
+        if (sensorFragment == null) {
             sensorFragment = new SensorFragment();
         }
     }
 
     void showMapFragment(boolean backStack) {
-        context.setFragment(mapsFragment,MAPS_FRAGMENT_TAG, backStack);
+        context.setFragment(mapsFragment, MAPS_FRAGMENT_TAG, backStack);
     }
 
     void showSensorFragment(boolean backStack) {
-        context.setFragment(sensorFragment,SENSOR_FRAGMENT_TAG, backStack);
+        context.setFragment(sensorFragment, SENSOR_FRAGMENT_TAG, backStack);
     }
 
     void showAPIFragment(boolean backStack) {
-        if (location != null){
+        if (location != null) {
             requestOpenWeatherData("volley", API_FRAGMENT_TAG);
         }
-        context.setFragment(apiFragment,API_FRAGMENT_TAG, backStack);
+        context.setFragment(apiFragment, API_FRAGMENT_TAG, backStack);
     }
 
-    void showDifferenceFragment(boolean backStack){
-        context.setFragment(differenceFragment,DIFFERENCE_FRAGMENT_TAG,backStack);
+    void showDifferenceFragment(boolean backStack) {
+        context.setFragment(differenceFragment, DIFFERENCE_FRAGMENT_TAG, backStack);
     }
 
     void setLocation(LatLng location, String respondTo) {
         this.location = location;
-        if (respondTo.matches(MAPS_FRAGMENT_TAG) || respondTo.matches(API_FRAGMENT_TAG)){
+        if (respondTo.matches(MAPS_FRAGMENT_TAG) || respondTo.matches(API_FRAGMENT_TAG)) {
             showAPIFragment(false);
         } else {
             requestOpenWeatherData("volley", respondTo);
@@ -106,18 +123,18 @@ class Controller {
 
     void requestOpenWeatherData(String type, String respondTo) {
         this.respondTo = respondTo;
-        if (location != null){
-            if (type.matches("async")){
+        if (location != null) {
+            if (type.matches("async")) {
                 openWeatherAPI.setNewAsynctaskListener(new AsyncTaskListener());
             }
-            openWeatherAPI.sendWeatherDataRequest(type,location);
+            openWeatherAPI.sendWeatherDataRequest(type, location);
         } else {
             Toast.makeText(context, "No location is set", Toast.LENGTH_LONG).show();
         }
     }
-    
+
     private String[] parseJSONWeatherData(JSONObject json) throws JSONException {
-        String [] toReturn = new String [6];
+        String[] toReturn = new String[6];
         JSONObject coord = json.getJSONObject("coord");
         toReturn[0] = "@ Lat: " + coord.getDouble("lat") + ", Long: " + coord.getDouble("lon");
         JSONArray weatherArray = json.getJSONArray("weather");
@@ -131,8 +148,8 @@ class Controller {
         return toReturn;
     }
 
-    private int findImageResource(String weather){
-        switch (weather){
+    private int findImageResource(String weather) {
+        switch (weather) {
             case "01d":
                 return R.drawable.a01d;
             case "02d":
@@ -173,24 +190,24 @@ class Controller {
         return -1;
     }
 
-    class VolleyListener implements Response.Listener<JSONObject>, Response.ErrorListener{
+    class VolleyListener implements Response.Listener<JSONObject>, Response.ErrorListener {
         private static final String TAG = "via Volley";
 
         @Override
         public void onResponse(JSONObject response) {
             try {
                 Log.d(TAG, "onResponse: " + response.toString());
-                final String [] data = parseJSONWeatherData(response);
+                final String[] data = parseJSONWeatherData(response);
                 final int weatherImageResource = findImageResource(data[2]);
                 final String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime());
-                switch (respondTo){
+                switch (respondTo) {
                     case MAPS_FRAGMENT_TAG:
                     case API_FRAGMENT_TAG:
-                        apiFragment.setValues(data[0],data[1],weatherImageResource,data[3],data[4],data[5],timeStamp,TAG);
+                        apiFragment.setValues(data[0], data[1], weatherImageResource, data[3], data[4], data[5], timeStamp, TAG);
 //                        showAPIFragment();
                         break;
                     case DIFFERENCE_FRAGMENT_TAG:
-                        differenceFragment.setValues(data[0],data[3],data[4],data[5]);
+                        differenceFragment.setValues(data[0], data[3], data[4], data[5]);
                         break;
                 }
             } catch (JSONException e) {
@@ -207,6 +224,7 @@ class Controller {
 
     class AsyncTaskListener extends AsyncTask<String, Void, JSONObject> {
         private static final String TAG = "via AsyncTask";
+
         @Override
         protected JSONObject doInBackground(String... urls) {
             try {
@@ -226,20 +244,20 @@ class Controller {
 
         @Override
         protected void onPostExecute(JSONObject response) {
-            if (response != null){
+            if (response != null) {
                 try {
                     Log.d(TAG, "onResponse: " + response.toString());
-                    final String [] data = parseJSONWeatherData(response);
+                    final String[] data = parseJSONWeatherData(response);
                     final int weatherImageResource = findImageResource(data[2]);
                     final String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().getTime());
-                    switch (respondTo){
+                    switch (respondTo) {
                         case MAPS_FRAGMENT_TAG:
                         case API_FRAGMENT_TAG:
 //                            showAPIFragment();
-                            apiFragment.setValues(data[0],data[1],weatherImageResource,data[3],data[4],data[5],timeStamp,TAG);
+                            apiFragment.setValues(data[0], data[1], weatherImageResource, data[3], data[4], data[5], timeStamp, TAG);
                             break;
                         case DIFFERENCE_FRAGMENT_TAG:
-                            differenceFragment.setValues(data[0],data[3],data[4],data[5]);
+                            differenceFragment.setValues(data[0], data[3], data[4], data[5]);
                             break;
                     }
                 } catch (JSONException e) {
