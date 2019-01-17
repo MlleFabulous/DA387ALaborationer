@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.util.List;
+
 @Entity(tableName = "step_session_table")
 public class StepSession {
     @PrimaryKey(autoGenerate = true)
@@ -17,10 +19,14 @@ public class StepSession {
     @ColumnInfo(name = "session_date")
     private long date;
 
-    private int steps;
+    @Ignore
     private int walkedSteps;
+
+    @Ignore
     private int runSteps;
 
+    @Ignore
+    private List<Step> steps;
 
     public StepSession(long sessionID, long userID, long date) {
         this.sessionID = sessionID;
@@ -50,14 +56,6 @@ public class StepSession {
         return date;
     }
 
-    public int getSteps() {
-        return steps;
-    }
-
-    public void setSteps(int steps) {
-        this.steps = steps;
-    }
-
     public int getWalkedSteps() {
         return walkedSteps;
     }
@@ -72,5 +70,13 @@ public class StepSession {
 
     public void setRunSteps(int ranSteps) {
         this.runSteps = ranSteps;
+    }
+
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
+    }
+
+    public List<Step> getSteps() {
+        return steps;
     }
 }

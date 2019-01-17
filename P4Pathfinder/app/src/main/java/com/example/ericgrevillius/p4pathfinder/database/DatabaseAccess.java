@@ -44,8 +44,8 @@ public interface DatabaseAccess {
     @Query("SELECT * FROM step_session_table WHERE user_id = :userID AND session_date BETWEEN :fromDate AND :toDate")
     List<StepSession> getUsersSessionsFromTo(long userID, long fromDate, long toDate);
 
-    @Query("SELECT count(step_id) FROM step_table WHERE session_id = :sessionID")
-    int getTotalSteps(long sessionID);
+    @Query("SELECT * FROM step_table WHERE session_id = :sessionID")
+    List<Step> getSteps(long sessionID);
 
     @Query("SELECT count(step_id) FROM step_table WHERE session_id = :sessionID AND step_movement = :typeMovement")
     int getTypeSteps(long sessionID, String typeMovement);

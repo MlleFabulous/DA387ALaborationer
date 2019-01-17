@@ -12,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.ericgrevillius.p4pathfinder.database.Step;
 import com.example.ericgrevillius.p4pathfinder.database.StepSession;
 
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -28,19 +30,23 @@ public class SessionDialogFragment extends DialogFragment {
     private String date;
     private TextView totalStepsTextView;
     private String totalSteps;
+    private TextView stepsPerSecondTextView;
+    private String stepsPerSecond;
     private TextView walkingStepTextView;
     private String walkingSteps;
     private TextView walkingPercentTextView;
-    private String walkingPercent;
+    private String walkingPercentString;
     private TextView runningStepTextView;
     private String runningSteps;
     private TextView runningPercentTextView;
-    private String runningPercent;
+    private String runningPercentString;
     private TextView movementCommentTextView;
     private String movementComment;
     private Button closeButton;
     private boolean isServiceActive;
     private long sessionID;
+    private double walkingPercent;
+    private double runningPercent;
     private Thread thread;
 
     public SessionDialogFragment() {
@@ -67,13 +73,14 @@ public class SessionDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initializeComponents(view,savedInstanceState);
+        initializeComponents(view, savedInstanceState);
         initializeThread();
     }
 
     private void initializeComponents(View view, Bundle savedInstanceState) {
         dateTextView = view.findViewById(R.id.session_dialog_date_text_view);
         totalStepsTextView = view.findViewById(R.id.session_dialog_total_steps_text_view);
+        stepsPerSecondTextView = view.findViewById(R.id.session_dialog_steps_per_second_text_view);
         walkingStepTextView = view.findViewById(R.id.session_dialog_walking_text_view);
         walkingPercentTextView = view.findViewById(R.id.session_dialog_walking_percent_text_view);
         runningStepTextView = view.findViewById(R.id.session_dialog_running_text_view);
@@ -92,19 +99,21 @@ public class SessionDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             date = savedInstanceState.getString("date");
             dateTextView.setText(date);
             totalSteps = savedInstanceState.getString("totalSteps");
             totalStepsTextView.setText(totalSteps);
+            stepsPerSecond = savedInstanceState.getString("stepsPerSecond");
+            stepsPerSecondTextView.setText(stepsPerSecond);
             walkingSteps = savedInstanceState.getString("walkingSteps");
             walkingStepTextView.setText(walkingSteps);
-            walkingPercent = savedInstanceState.getString("walkingPercent");
-            walkingPercentTextView.setText(walkingPercent);
+            walkingPercentString = savedInstanceState.getString("walkingPercentString");
+            walkingPercentTextView.setText(walkingPercentString);
             runningSteps = savedInstanceState.getString("runningSteps");
             runningStepTextView.setText(runningSteps);
-            runningPercent = savedInstanceState.getString("runningPercent");
-            runningPercentTextView.setText(runningPercent);
+            runningPercentString = savedInstanceState.getString("runningPercentString");
+            runningPercentTextView.setText(runningPercentString);
             movementComment = savedInstanceState.getString("movementComment");
             movementCommentTextView.setText(movementComment);
         }
@@ -112,7 +121,7 @@ public class SessionDialogFragment extends DialogFragment {
 
     private void initializeThread() {
         Bundle args = getArguments();
-        if (args != null){
+        if (args != null) {
             isServiceActive = args.getBoolean("isServiceActive");
             sessionID = args.getLong("sessionID");
             thread = new Thread(new InformationTask());
@@ -126,79 +135,120 @@ public class SessionDialogFragment extends DialogFragment {
 
     public void setSession(StepSession session) {
         this.session = session;
+        if (getActivity() != null) {
+            updateDate();
+            updateTotalSteps();
+            updateStepsPerSecond();
+            updateWalkingSteps();
+            updateWalkingPercent();
+            updateRunningSteps();
+            updateRunningPercent();
+            updateMovementComment();
+        }
+    }
+
+    private void updateDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(session.getDate());
         date = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
-        if (dateTextView != null){
+        if (dateTextView != null) {
             dateTextView.setText(date);
         }
-        totalSteps = "Total steps: " + session.getSteps();
-        if (totalStepsTextView != null){
+    }
+
+    private void updateTotalSteps() {
+        totalSteps = "Total steps: " + session.getSteps().size();
+        if (totalStepsTextView != null) {
             totalStepsTextView.setText(totalSteps);
         }
+    }
+
+    private void updateStepsPerSecond() {
+        List<Step> steps = session.getSteps();
+        if (steps.size() > 0) {
+            long end = isServiceActive ? Calendar.getInstance().getTimeInMillis() : steps.get(steps.size() - 1).getDate();
+            long timeIntervalInSeconds = (end - steps.get(0).getDate()) / 1000;
+            double SPS = (double) session.getSteps().size() / timeIntervalInSeconds;
+            stepsPerSecond = String.format(getActivity().getResources().getConfiguration().locale, "%.1f", SPS) + " steps/second";
+            if (stepsPerSecondTextView != null) {
+                stepsPerSecondTextView.setText(stepsPerSecond);
+            }
+        }
+    }
+
+    private void updateWalkingSteps() {
         walkingSteps = session.getWalkedSteps() + " steps.";
-        if (walkingStepTextView != null){
+        if (walkingStepTextView != null) {
             walkingStepTextView.setText(walkingSteps);
         }
-        double percent;
+    }
+
+    private void updateWalkingPercent() {
         try {
-            percent = ((double)session.getWalkedSteps() / (double)session.getSteps())*100.0;
-        } catch (ArithmeticException e){
-            percent = 0.0;
+            walkingPercent = ((double) session.getWalkedSteps() / (double) session.getSteps().size()) * 100.0;
+        } catch (ArithmeticException e) {
+            walkingPercent = 0.0;
         }
-        if (getActivity() != null){
-            walkingPercent = String.format(getActivity().getResources().getConfiguration().locale,"%.1f", percent) + " %";
+        walkingPercentString = String.format(getActivity().getResources().getConfiguration().locale, "%.1f", walkingPercent) + " %";
+        if (walkingPercentTextView != null) {
+            walkingPercentTextView.setText(walkingPercentString);
         }
-        if (walkingPercentTextView != null){
-            walkingPercentTextView.setText(walkingPercent);
-        }
+
+    }
+
+    private void updateRunningSteps() {
         runningSteps = session.getRunSteps() + " steps.";
-        if (runningStepTextView != null){
+        if (runningStepTextView != null) {
             runningStepTextView.setText(runningSteps);
         }
+    }
+
+    private void updateRunningPercent() {
         try {
-            percent = ((double)session.getRunSteps() / (double)session.getSteps()) * 100.0;
-        } catch (ArithmeticException e){
-            //percent is already 0
+            runningPercent = ((double) session.getRunSteps() / (double) session.getSteps().size()) * 100.0;
+        } catch (ArithmeticException e) {
+            //runningPercent is already 0
         }
-        if (getActivity() != null){
-            runningPercent = String.format(getActivity().getResources().getConfiguration().locale,"%.1f", percent) + " %";
+        runningPercentString = String.format(getActivity().getResources().getConfiguration().locale, "%.1f", runningPercent) + " %";
+        if (runningPercentTextView != null) {
+            runningPercentTextView.setText(runningPercentString);
         }
-        if (runningPercentTextView != null){
-            runningPercentTextView.setText(runningPercent);
-        }
-        if (percent > 80.0){
+    }
+
+    private void updateMovementComment() {
+        if (runningPercent > 80.0) {
             movementComment = "You're awesome!";
-        } else if (percent > 60.0){
+        } else if (runningPercent > 60.0) {
             movementComment = "Good job!";
-        } else if (percent > 40.0){
+        } else if (runningPercent > 40.0) {
             movementComment = "Not bad!";
-        } else if (percent > 20.0){
+        } else if (runningPercent > 20.0) {
             movementComment = "*heavy sigh* Try again.";
         } else {
             movementComment = "You're a couch potato!";
         }
-        if (movementCommentTextView != null){
+        if (movementCommentTextView != null) {
             movementCommentTextView.setText(movementComment);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString("date",date);
-        outState.putString("totalSteps",totalSteps);
-        outState.putString("walkingSteps",walkingSteps);
-        outState.putString("walkingPercent",walkingPercent);
-        outState.putString("runningSteps",runningSteps);
-        outState.putString("runningPercent",runningPercent);
-        outState.putString("movementComment",movementComment);
+        outState.putString("date", date);
+        outState.putString("totalSteps", totalSteps);
+        outState.putString("stepsPerSecond", stepsPerSecond);
+        outState.putString("walkingSteps", walkingSteps);
+        outState.putString("walkingPercentString", walkingPercentString);
+        outState.putString("runningSteps", runningSteps);
+        outState.putString("runningPercentString", runningPercentString);
+        outState.putString("movementComment", movementComment);
         super.onSaveInstanceState(outState);
     }
 
-    private class InformationTask implements Runnable{
+    private class InformationTask implements Runnable {
         @Override
         public void run() {
-            do{
+            do {
                 try {
                     controller.getSessionInformation(sessionID);
                     Thread.sleep(1000);

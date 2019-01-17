@@ -35,6 +35,14 @@
             android:textAlignment="center"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/session_dialog_steps_per_second_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
         <LinearLayout
             android:id="@+id/session_dialog_walking_layout"
             android:layout_width="match_parent"
@@ -71,7 +79,6 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

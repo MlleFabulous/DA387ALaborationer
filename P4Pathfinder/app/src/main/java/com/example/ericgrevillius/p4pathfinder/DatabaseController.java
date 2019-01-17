@@ -303,8 +303,7 @@ public class DatabaseController {
                 sessions = databaseAccess.getUsersSessionsFromTo(user.getUserID(), fromDate, toDate);
             }
             for (StepSession s: sessions) {
-                int steps = databaseAccess.getTotalSteps(s.getSessionID());
-                s.setSteps(steps);
+                s.setSteps(databaseAccess.getSteps(s.getSessionID()));
             }
             databaseUIListener.setSessionList(sessions);
         }
@@ -320,7 +319,7 @@ public class DatabaseController {
         @Override
         public void run() {
             StepSession session = databaseAccess.getSession(sessionID);
-            session.setSteps(databaseAccess.getTotalSteps(sessionID));
+            session.setSteps(databaseAccess.getSteps(sessionID));
             session.setWalkedSteps(databaseAccess.getTypeSteps(sessionID, "walking"));
             session.setRunSteps(databaseAccess.getTypeSteps(sessionID,"running"));
             databaseUIListener.setSessionInformation(session);
@@ -342,6 +341,5 @@ public class DatabaseController {
         void resultUsername(boolean available);
         void resultLogin(String result);
         void resultFingerprintLogin(User user);
-
     }
 }

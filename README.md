@@ -84,3 +84,7 @@
 #41 Updated gradle files in P1SensationStation.
 
 #42 Added zip-files for all the project to turn in. Highest grade on the evaluation from the teacher!! <3
+
+#43 Added feature to P4Pathfinder where it will now display steps per second.
+
+

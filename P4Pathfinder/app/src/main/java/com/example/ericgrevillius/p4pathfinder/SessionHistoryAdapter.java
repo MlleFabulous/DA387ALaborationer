@@ -44,7 +44,7 @@ public class SessionHistoryAdapter extends ArrayAdapter<StepSession> {
         int month = calendar.get(Calendar.MONTH) + 1;
         int year = calendar.get(Calendar.YEAR);
         String message = year + "-" + month + "-" + day + "\n" +
-                "Steps taken: " + session.getSteps();
+                "Steps taken: " + session.getSteps().size();
         textView.setText(message);
         return textView;
     }

@@ -40,7 +40,6 @@ public class CurrentSessionFragment extends Fragment implements SensorEventListe
     private float [] lastMagnetometer;
     private boolean isLastAccelerometerSet;
     private boolean isLastMagnetometerSet;
-    private StepServiceConnection serviceConnection;
     private Intent stepsIntent;
     StepService service;
     boolean isServiceBound;
@@ -180,7 +179,6 @@ public class CurrentSessionFragment extends Fragment implements SensorEventListe
                         startStopSessionButton.setText(getString(R.string.start_session_text));
                         controller.searchForSessions(-1,-1);
                     } else { //start service
-                        serviceConnection = new StepServiceConnection(CurrentSessionFragment.this);
                         stepsIntent = new Intent(getActivity(),StepService.class);
                         stepsIntent.putExtra("username", controller.getUsername());
                         isServiceBound = true;
